@@ -7,6 +7,7 @@ import {
   ShieldAlert,
   ChevronDown,
   X,
+  ArrowRight,
 } from 'lucide-react'
 import { CrowdPulseLogo } from '../components/common/CrowdPulseLogo'
 
@@ -47,37 +48,35 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({
 }) => {
   const [notificationDrawerOpen, setNotificationDrawerOpen] = useState(false)
   const [cityDropdownOpen, setCityDropdownOpen] = useState(false)
+  const [howItWorksOpen, setHowItWorksOpen] = useState(false)
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#090b0e] text-slate-100">
+    <div className="min-h-screen flex flex-col bg-[#F6F5F0] text-[#202522]">
       {/* Top Civic Navigation */}
-      <header className="sticky top-0 z-40 bg-[#0c0e14]/95 backdrop-blur-md border-b border-[#1e2638]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-40 bg-[#F6F5F0]/95 backdrop-blur-md border-b border-[#DFE2DC]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link to="/public" className="flex items-center">
               <CrowdPulseLogo size="md" showTagline={false} />
-              <span className="hidden sm:inline-block ml-3 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">
-                CITIZEN PORTAL
-              </span>
             </Link>
 
-            {/* Center: Location Bar */}
+            {/* Center: My Location Bar */}
             <div className="flex items-center space-x-2">
               <div className="relative">
                 <button
                   onClick={() => setCityDropdownOpen(!cityDropdownOpen)}
-                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#121620] border border-[#2c3852] text-xs font-mono text-slate-200 hover:border-cyan-500 transition-colors shadow-sm"
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#FFFFFF] border border-[#DFE2DC] text-xs font-medium text-[#202522] hover:border-[#176B65] transition-colors shadow-2xs"
                 >
-                  <MapPin className="w-3.5 h-3.5 text-cyan-400" />
-                  <span className="font-bold">{selectedCity}</span>
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                  <MapPin className="w-3.5 h-3.5 text-[#176B65]" />
+                  <span>{selectedCity}, India</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-[#777D78]" />
                 </button>
 
                 {cityDropdownOpen && (
-                  <div className="absolute top-full mt-1.5 left-0 w-48 rounded-xl border border-[#2c3852] bg-[#0c0e14] py-1.5 font-mono text-xs shadow-xl z-50">
-                    <div className="px-3 py-1 text-[10px] text-slate-500 uppercase tracking-wider">
-                      SELECT CITY (INDIA)
+                  <div className="absolute top-full mt-2 left-0 w-48 rounded-xl border border-[#DFE2DC] bg-[#FFFFFF] py-1.5 text-xs shadow-lg z-50">
+                    <div className="px-3 py-1 text-[10px] text-[#777D78] uppercase tracking-wider font-medium">
+                      Select Region
                     </div>
                     {INDIAN_CITIES.map((c) => (
                       <button
@@ -86,12 +85,14 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({
                           onSelectCity(c.name)
                           setCityDropdownOpen(false)
                         }}
-                        className={`w-full text-left px-3 py-2 flex items-center justify-between hover:bg-[#171d2b] transition-colors ${
-                          selectedCity === c.name ? 'text-cyan-400 font-bold bg-[#121620]' : 'text-slate-300'
+                        className={`w-full text-left px-3 py-2 flex items-center justify-between hover:bg-[#F6F5F0] transition-colors ${
+                          selectedCity === c.name
+                            ? 'text-[#176B65] font-semibold bg-[#EBF4F3]'
+                            : 'text-[#202522]'
                         }`}
                       >
                         <span>{c.name}</span>
-                        <span className="text-[10px] text-slate-500">{c.state}</span>
+                        <span className="text-[10px] text-[#777D78]">{c.state}</span>
                       </button>
                     ))}
                   </div>
@@ -101,63 +102,72 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({
               {/* GPS Button */}
               <button
                 onClick={onUseGPS}
-                title="Use current GPS location"
-                className="p-1.5 rounded-lg bg-[#121620] border border-[#2c3852] text-slate-300 hover:text-cyan-400 hover:border-cyan-500 transition-colors"
+                title="Locate my position via device GPS"
+                className="p-2 rounded-full bg-[#FFFFFF] border border-[#DFE2DC] text-[#777D78] hover:text-[#176B65] hover:border-[#176B65] transition-colors shadow-2xs"
               >
-                <Navigation className="w-4 h-4" />
+                <Navigation className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            {/* Right: Alert Status Pill & Notifications Bell */}
-            <div className="flex items-center space-x-3">
-              {/* Overall Status Badge */}
+            {/* Right Navigation Links & Status */}
+            <div className="flex items-center space-x-4 text-xs font-medium">
+              {/* How it Works link */}
+              <button
+                onClick={() => setHowItWorksOpen(true)}
+                className="hidden md:inline-block text-[#777D78] hover:text-[#202522] transition-colors"
+              >
+                How it works
+              </button>
+
+              {/* Overall Status Pill */}
               <div
-                className={`hidden md:flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold border ${
+                className={`hidden sm:flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-medium border ${
                   overallStatus === 'RED'
-                    ? 'bg-rose-950/80 text-rose-300 border-rose-700 animate-pulse'
+                    ? 'bg-[#FDF2F2] text-[#C94C4C] border-[#F8D7D7]'
                     : overallStatus === 'YELLOW'
-                    ? 'bg-amber-950/80 text-amber-300 border-amber-700'
-                    : 'bg-emerald-950/80 text-emerald-300 border-emerald-700'
+                    ? 'bg-[#FEF8ED] text-[#D69B32] border-[#FBEAC9]'
+                    : 'bg-[#EEF7F2] text-[#38845B] border-[#D1EBDD]'
                 }`}
               >
                 <span
                   className={`w-2 h-2 rounded-full ${
                     overallStatus === 'RED'
-                      ? 'bg-rose-500'
+                      ? 'bg-[#C94C4C]'
                       : overallStatus === 'YELLOW'
-                      ? 'bg-amber-400'
-                      : 'bg-emerald-400'
+                      ? 'bg-[#D69B32]'
+                      : 'bg-[#38845B]'
                   }`}
                 />
                 <span>
                   {overallStatus === 'RED'
-                    ? 'AVOID ACTIVE ZONES'
+                    ? 'High Congestion Active'
                     : overallStatus === 'YELLOW'
-                    ? 'CONGESTION REPORTED'
-                    : 'ALL AREAS NORMAL'}
+                    ? 'Moderate Density'
+                    : 'Normal Flow'}
                 </span>
               </div>
 
-              {/* Notification Drawer Bell */}
+              {/* Alerts Bell */}
               <button
                 onClick={() => setNotificationDrawerOpen(true)}
-                className="relative p-2 rounded-lg bg-[#121620] border border-[#2c3852] text-slate-300 hover:text-white transition-colors"
-                aria-label="Open notifications"
+                className="relative p-2 rounded-full bg-[#FFFFFF] border border-[#DFE2DC] text-[#202522] hover:border-[#176B65] transition-colors shadow-2xs"
+                aria-label="View safety alerts"
               >
-                <Bell className="w-4 h-4" />
+                <Bell className="w-4 h-4 text-[#202522]" />
                 {activeAlertsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#C94C4C] text-white text-[10px] font-bold flex items-center justify-center">
                     {activeAlertsCount}
                   </span>
                 )}
               </button>
 
-              {/* Role Switch */}
+              {/* Authority Sign In link */}
               <Link
-                to="/"
-                className="text-xs font-mono text-slate-400 hover:text-cyan-400 transition-colors hidden sm:inline-block pl-2 border-l border-[#1e2638]"
+                to="/authority/login"
+                className="hidden lg:inline-flex items-center space-x-1 text-[#176B65] hover:text-[#12544F] transition-colors pl-3 border-l border-[#DFE2DC]"
               >
-                Switch Role
+                <span>Authority Sign In</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           </div>
@@ -165,85 +175,136 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {children}
       </main>
 
-      {/* Public Footer */}
-      <footer className="border-t border-[#1e2638] bg-[#07090c] py-6 px-4 sm:px-6 lg:px-8 font-mono text-xs text-slate-400 mt-auto">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center space-x-3 text-slate-400">
-            <ShieldAlert className="w-4 h-4 text-amber-500 shrink-0" />
+      {/* Public Civic Footer */}
+      <footer className="border-t border-[#DFE2DC] bg-[#ECEDE8] py-8 px-4 sm:px-6 lg:px-8 text-xs text-[#777D78] mt-auto">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center space-x-2 text-[#202522]">
+            <ShieldAlert className="w-4 h-4 text-[#D69B32] shrink-0" />
             <span>
-              EMERGENCY DIAL: <strong className="text-white">112</strong> (National) | <strong className="text-white">100</strong> (Police) | <strong className="text-white">108</strong> (Ambulance)
+              National Emergency Services: <strong>112</strong> | Police: <strong>100</strong> | Ambulance: <strong>108</strong>
             </span>
           </div>
 
-          <div className="flex items-center space-x-6 text-[11px] text-slate-500">
+          <div className="flex items-center space-x-6 text-[11px] text-[#777D78]">
             <span>Demonstration Safety Portal • India</span>
-            <Link to="/authority/login" className="hover:text-emerald-400 transition-colors">
-              Authorised Authority Login
+            <Link to="/authority/login" className="hover:text-[#176B65] transition-colors font-medium">
+              Authorised Control Room Login
+            </Link>
+            <Link to="/" className="hover:text-[#202522] transition-colors">
+              Switch Role
             </Link>
           </div>
         </div>
       </footer>
 
-      {/* In-App Notification Slide-Over Drawer */}
+      {/* Slide-over Notification Drawer */}
       {notificationDrawerOpen && (
-        <div className="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-sm flex justify-end">
-          <div className="w-full max-w-md bg-[#0c0e14] border-l border-[#1e2638] h-full flex flex-col p-6 space-y-4 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[#1e2638] pb-3">
+        <div className="fixed inset-0 z-50 overflow-hidden bg-black/30 backdrop-blur-2xs flex justify-end">
+          <div className="w-full max-w-md bg-[#FFFFFF] border-l border-[#DFE2DC] h-full flex flex-col p-6 space-y-4 shadow-xl">
+            <div className="flex items-center justify-between border-b border-[#DFE2DC] pb-3">
               <div className="flex items-center space-x-2">
-                <Bell className="w-4 h-4 text-cyan-400" />
-                <span className="font-mono font-bold text-white text-sm">Public Safety Alerts</span>
+                <Bell className="w-4 h-4 text-[#176B65]" />
+                <span className="font-semibold text-[#202522] text-sm">
+                  Active Public Advisories
+                </span>
               </div>
               <button
                 onClick={() => setNotificationDrawerOpen(false)}
-                className="p-1 rounded text-slate-400 hover:text-white"
+                className="p-1 rounded text-[#777D78] hover:text-[#202522]"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto space-y-3 font-mono text-xs pr-1">
+            <div className="flex-1 overflow-y-auto space-y-3 text-xs pr-1">
               {notifications.length === 0 ? (
-                <div className="py-12 text-center text-slate-500">
-                  No active public safety advisories for {selectedCity}.
+                <div className="py-16 text-center text-[#777D78]">
+                  No active crowd-safety advisories for {selectedCity}.
                 </div>
               ) : (
                 notifications.map((notif) => (
                   <div
                     key={notif.id}
-                    className="p-3.5 rounded-xl border border-[#1e2638] bg-[#121620] space-y-2 hover:border-[#2c3852] transition-colors"
+                    className="p-4 rounded-xl border border-[#DFE2DC] bg-[#F6F5F0] space-y-2"
                   >
                     <div className="flex items-center justify-between">
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
                           notif.severity === 'RED'
-                            ? 'bg-rose-950 text-rose-300 border border-rose-800'
+                            ? 'bg-[#FDF2F2] text-[#C94C4C]'
                             : notif.severity === 'YELLOW'
-                            ? 'bg-amber-950 text-amber-300 border border-amber-800'
-                            : 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                            ? 'bg-[#FEF8ED] text-[#D69B32]'
+                            : 'bg-[#EEF7F2] text-[#38845B]'
                         }`}
                       >
-                        {notif.severity} ALERT
+                        {notif.severity === 'RED' ? 'Red Alert' : notif.severity === 'YELLOW' ? 'Moderate Congestion' : 'Normal'}
                       </span>
-                      <span className="text-[10px] text-slate-500">{notif.time}</span>
+                      <span className="text-[10px] text-[#777D78]">{notif.time}</span>
                     </div>
 
-                    <h4 className="font-bold text-white text-sm">{notif.title}</h4>
-                    <p className="text-slate-400 text-xs">{notif.locality}</p>
+                    <h4 className="font-semibold text-[#202522] text-sm">{notif.title}</h4>
+                    <p className="text-[#777D78] text-xs">{notif.locality}</p>
 
-                    <div className="p-2 rounded bg-[#0a0c10] border border-[#2c3852] text-slate-300 text-[11px] leading-relaxed">
-                      <strong className="text-cyan-400">Action:</strong> {notif.action}
+                    <div className="p-2.5 rounded-lg bg-[#FFFFFF] border border-[#DFE2DC] text-[#202522] text-[11px] leading-relaxed">
+                      <strong className="text-[#176B65]">Action:</strong> {notif.action}
                     </div>
                   </div>
                 ))
               )}
             </div>
 
-            <div className="pt-3 border-t border-[#1e2638] text-[11px] font-mono text-slate-500 text-center">
-              Alerts update in real-time as verified by metropolitan safety authorities.
+            <div className="pt-3 border-t border-[#DFE2DC] text-[11px] text-[#777D78] text-center">
+              Alerts update as verified by local traffic and emergency authorities.
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* How it Works Modal */}
+      {howItWorksOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-2xs">
+          <div className="max-w-md w-full bg-[#FFFFFF] border border-[#DFE2DC] rounded-2xl p-6 shadow-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-[#DFE2DC] pb-3">
+              <h3 className="font-semibold text-[#202522] text-base">
+                How CrowdPulse Works
+              </h3>
+              <button
+                onClick={() => setHowItWorksOpen(false)}
+                className="text-[#777D78] hover:text-[#202522]"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs text-[#777D78] leading-relaxed">
+              <p>
+                CrowdPulse aggregates verified crowd movement updates and pedestrian density observations from municipal safety and traffic authorities.
+              </p>
+              <div className="p-3 rounded-xl bg-[#F6F5F0] border border-[#DFE2DC] space-y-1.5 text-[#202522]">
+                <div className="font-semibold text-[#176B65]">4 Simple Answers:</div>
+                <ul className="space-y-1 text-xs text-[#777D78]">
+                  <li>• <strong>What</strong> is happening nearby</li>
+                  <li>• <strong>Where</strong> the congestion or choke point is</li>
+                  <li>• <strong>How close</strong> it is to your selected location</li>
+                  <li>• <strong>What to do</strong> to bypass delays safely</li>
+                </ul>
+              </div>
+              <p className="text-[11px]">
+                No personal data, camera footage, or facial recognition is ever shared with the public. All tracking is completely anonymous.
+              </p>
+            </div>
+
+            <div className="pt-2 text-right">
+              <button
+                onClick={() => setHowItWorksOpen(false)}
+                className="px-4 py-2 rounded-xl bg-[#176B65] text-white text-xs font-medium hover:bg-[#12544F] transition-colors"
+              >
+                Got it
+              </button>
             </div>
           </div>
         </div>

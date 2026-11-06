@@ -55,7 +55,7 @@ export const PredictionLabPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#1e2638] pb-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold font-mono text-white flex items-center space-x-2">
-            <BrainCircuit className="w-6 h-6 text-cyan-400" />
+            <BrainCircuit className="w-6 h-6 text-teal-400" />
             <span>Spatiotemporal Prediction Lab</span>
           </h1>
           <p className="text-xs text-slate-400 font-mono mt-1">
@@ -63,7 +63,7 @@ export const PredictionLabPage: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="px-2.5 py-1 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 text-xs font-mono flex items-center space-x-1.5">
+          <span className="px-2.5 py-1 rounded bg-[#176B65]/20 text-teal-300 border border-[#176B65]/40 text-xs font-mono flex items-center space-x-1.5">
             <Sparkles className="w-3.5 h-3.5" />
             <span>RIGOROUS HOLDOUT SPLIT</span>
           </span>
@@ -91,7 +91,7 @@ export const PredictionLabPage: React.FC = () => {
 
           <div className="rounded-xl border border-[#1e2638] bg-[#121620] p-4 space-y-1">
             <span className="text-slate-400 text-[11px]">MACRO F1-SCORE</span>
-            <div className="text-xl font-bold text-cyan-400">
+            <div className="text-xl font-bold text-teal-400">
               {modelStatus.random_forest.f1_macro.toFixed(3)}
             </div>
             <div className="text-[10px] text-slate-500">Balanced class performance</div>
@@ -111,7 +111,7 @@ export const PredictionLabPage: React.FC = () => {
         <div className="rounded-xl border border-[#1e2638] bg-[#121620] p-5 space-y-3">
           <div className="flex items-center justify-between border-b border-[#1e2638] pb-2 text-xs font-mono">
             <span className="text-white font-semibold flex items-center space-x-1.5">
-              <TrendingUp className="w-4 h-4 text-cyan-400" />
+              <TrendingUp className="w-4 h-4 text-teal-400" />
               <span>GLOBAL FEATURE IMPORTANCE (RANDOM FOREST GINI)</span>
             </span>
             <span className="text-slate-500 text-[11px]">Normalized %</span>
@@ -215,11 +215,11 @@ export const PredictionLabPage: React.FC = () => {
               disabled={isSimulating}
               className={`px-4 py-2.5 rounded-lg border text-left font-mono transition-all ${
                 selectedScenario === scen.id
-                  ? 'bg-cyan-950/80 border-cyan-500 text-white shadow-md'
+                  ? 'bg-[#176B65]/20 border-[#176B65] text-white shadow-md'
                   : 'bg-[#0a0c10] border-[#1e2638] text-slate-400 hover:text-white hover:border-[#2c3852]'
               }`}
             >
-              <div className="text-xs font-bold text-cyan-400 flex items-center space-x-1.5">
+              <div className="text-xs font-bold text-teal-400 flex items-center space-x-1.5">
                 {isSimulating && selectedScenario === scen.id && (
                   <Loader2 className="w-3 h-3 animate-spin" />
                 )}
@@ -232,7 +232,7 @@ export const PredictionLabPage: React.FC = () => {
 
         {/* Simulation Output Card */}
         {simResult && (
-          <div className="rounded-xl border border-cyan-900/60 bg-[#0a0c10] p-5 space-y-4 font-mono text-xs">
+          <div className="rounded-xl border border-[#176B65]/40 bg-[#0a0c10] p-5 space-y-4 font-mono text-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#1e2638] pb-3">
               <div>
                 <span className="text-[10px] text-amber-400 font-bold tracking-wider uppercase">
@@ -249,7 +249,7 @@ export const PredictionLabPage: React.FC = () => {
                       : simResult.assessment.predicted_crowd_state === 'Congested'
                       ? 'bg-amber-950 text-amber-300 border-amber-700'
                       : simResult.assessment.predicted_crowd_state === 'Densifying'
-                      ? 'bg-cyan-950 text-cyan-300 border-cyan-700'
+                      ? 'bg-[#176B65]/20 text-teal-300 border-[#176B65]/50'
                       : 'bg-emerald-950 text-emerald-300 border-emerald-700'
                   }`}
                 >
@@ -272,7 +272,7 @@ export const PredictionLabPage: React.FC = () => {
                     </div>
                     <div className="w-full bg-black/60 rounded-full h-1.5 overflow-hidden">
                       <div
-                        className="bg-cyan-400 h-1.5 rounded-full"
+                        className="bg-[#176B65] h-1.5 rounded-full"
                         style={{ width: `${prob * 100}%` }}
                       />
                     </div>

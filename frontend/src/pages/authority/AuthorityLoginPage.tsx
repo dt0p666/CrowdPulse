@@ -55,30 +55,27 @@ export const AuthorityLoginPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#07090d] text-slate-100 flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
-      {/* Background radial glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none" />
-
+    <div className="min-h-screen bg-[#F6F5F0] text-[#202522] flex flex-col justify-center items-center px-4 py-12 relative">
       <div className="w-full max-w-md relative z-10 space-y-6">
-        <div className="text-center space-y-2">
-          <div className="inline-flex justify-center mb-2">
+        <div className="text-center space-y-3">
+          <div className="inline-flex justify-center mb-1">
             <CrowdPulseLogo size="lg" showTagline={false} />
           </div>
-          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-800 text-emerald-400 font-mono text-xs font-bold">
+          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-[#EBF4F3] border border-[#D0E5E3] text-[#176B65] text-xs font-semibold uppercase tracking-wider">
             <Shield className="w-3.5 h-3.5" />
-            <span>AUTHORITY & COMMAND ACCESS</span>
+            <span>Restricted Command Access</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">
-            Restricted Operations Suite
+          <h1 className="text-2xl font-semibold tracking-tight text-[#202522]">
+            Authority Operations Suite
           </h1>
-          <p className="text-xs text-slate-400">
-            Law enforcement, disaster management, and metropolitan safety control rooms.
+          <p className="text-xs text-[#777D78] max-w-sm mx-auto">
+            Designated for law enforcement, disaster management, and metropolitan safety control rooms.
           </p>
         </div>
 
-        <div className="rounded-2xl border border-[#1e2638] bg-[#0c0e14]/90 backdrop-blur-md p-6 shadow-2xl space-y-5">
+        <div className="rounded-2xl border border-[#DFE2DC] bg-[#FFFFFF] p-8 shadow-sm space-y-6">
           {error && (
-            <div className="p-3 rounded-xl border border-rose-900 bg-rose-950/40 text-rose-300 font-mono text-xs flex items-center space-x-2">
+            <div className="p-3.5 rounded-xl border border-[#F8D7D7] bg-[#FDF2F2] text-[#C94C4C] text-xs flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -86,35 +83,35 @@ export const AuthorityLoginPage: React.FC = () => {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-mono text-slate-400 mb-1">
-                OFFICIAL WORK EMAIL
+              <label className="block text-xs font-medium text-[#777D78] mb-1">
+                Official Email Address
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                <Mail className="w-4 h-4 text-[#777D78] absolute left-3.5 top-3" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="e.g. officer@punepolice.gov.in"
                   required
-                  className="w-full bg-[#121620] border border-[#2c3852] rounded-xl pl-9 pr-3 py-2 text-xs font-mono text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full bg-[#F6F5F0] border border-[#DFE2DC] rounded-xl pl-10 pr-3 py-2.5 text-xs text-[#202522] placeholder-[#9BA19C] focus:outline-none focus:border-[#176B65] transition-colors"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-slate-400 mb-1">
-                SECURITY PASSWORD
+              <label className="block text-xs font-medium text-[#777D78] mb-1">
+                Password
               </label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                <Lock className="w-4 h-4 text-[#777D78] absolute left-3.5 top-3" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
                   required
-                  className="w-full bg-[#121620] border border-[#2c3852] rounded-xl pl-9 pr-3 py-2 text-xs font-mono text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full bg-[#F6F5F0] border border-[#DFE2DC] rounded-xl pl-10 pr-3 py-2.5 text-xs text-[#202522] placeholder-[#9BA19C] focus:outline-none focus:border-[#176B65] transition-colors"
                 />
               </div>
             </div>
@@ -122,50 +119,50 @@ export const AuthorityLoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-black font-mono font-bold text-xs flex items-center justify-center space-x-2 transition-all shadow-lg shadow-emerald-950 disabled:opacity-50"
+              className="w-full py-2.5 px-4 rounded-xl bg-[#176B65] hover:bg-[#12544F] text-white font-medium text-xs flex items-center justify-center space-x-2 transition-all shadow-xs disabled:opacity-50"
             >
-              <span>{loading ? 'Authenticating...' : 'Sign In to Command Center'}</span>
+              <span>{loading ? 'Authenticating...' : 'Sign in to Command Suite'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
 
           {/* Quick Demo Pre-Fill Options */}
-          <div className="pt-4 border-t border-[#1e2638] space-y-2">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 text-center">
+          <div className="pt-4 border-t border-[#DFE2DC] space-y-2">
+            <div className="text-[11px] font-medium text-[#777D78] text-center">
               Demonstration 1-Click Credentials
             </div>
-            <div className="grid grid-cols-2 gap-2 font-mono text-xs">
+            <div className="grid grid-cols-2 gap-2 text-xs">
               <button
                 type="button"
                 onClick={fillAuthorityDemo}
-                className="p-2 rounded-lg bg-[#121620] hover:bg-[#181e2b] border border-[#2c3852] text-left transition-colors"
+                className="p-3 rounded-xl bg-[#F6F5F0] hover:bg-[#EBF4F3] border border-[#DFE2DC] text-left transition-colors"
               >
-                <div className="font-bold text-emerald-400 flex items-center space-x-1">
-                  <ShieldCheck className="w-3 h-3" />
+                <div className="font-semibold text-[#176B65] flex items-center space-x-1">
+                  <ShieldCheck className="w-3.5 h-3.5" />
                   <span>Authority Demo</span>
                 </div>
-                <div className="text-[10px] text-slate-400 truncate">Pune Police Traffic</div>
+                <div className="text-[10px] text-[#777D78] mt-0.5 truncate">Pune Police Traffic</div>
               </button>
 
               <button
                 type="button"
                 onClick={fillAdminDemo}
-                className="p-2 rounded-lg bg-[#121620] hover:bg-[#181e2b] border border-[#2c3852] text-left transition-colors"
+                className="p-3 rounded-xl bg-[#F6F5F0] hover:bg-[#EBF4F3] border border-[#DFE2DC] text-left transition-colors"
               >
-                <div className="font-bold text-cyan-400 flex items-center space-x-1">
-                  <KeyRound className="w-3 h-3" />
-                  <span>Platform Admin</span>
+                <div className="font-semibold text-[#202522] flex items-center space-x-1">
+                  <KeyRound className="w-3.5 h-3.5" />
+                  <span>Admin Demo</span>
                 </div>
-                <div className="text-[10px] text-slate-400 truncate">System Operator</div>
+                <div className="text-[10px] text-[#777D78] mt-0.5 truncate">System Console</div>
               </button>
             </div>
           </div>
         </div>
 
         {/* Back Link */}
-        <div className="text-center font-mono text-xs">
-          <Link to="/" className="text-slate-500 hover:text-slate-300 transition-colors">
-            ← Return to Role Selection Screen
+        <div className="text-center text-xs">
+          <Link to="/" className="text-[#777D78] hover:text-[#202522] transition-colors">
+            ← Return to role selection
           </Link>
         </div>
       </div>

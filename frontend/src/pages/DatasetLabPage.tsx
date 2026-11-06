@@ -113,7 +113,7 @@ export const DatasetLabPage: React.FC = () => {
         </div>
         <div className="flex items-center space-x-2">
           {processing && (
-            <span className="flex items-center space-x-1.5 text-xs font-mono text-cyan-400 bg-cyan-950/60 border border-cyan-800/80 px-2.5 py-1 rounded">
+            <span className="flex items-center space-x-1.5 text-xs font-mono text-teal-400 bg-[#176B65]/20 border border-[#176B65]/40 px-2.5 py-1 rounded">
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
               <span>PROCESSING TRAJECTORY...</span>
             </span>
@@ -173,7 +173,7 @@ export const DatasetLabPage: React.FC = () => {
           </div>
           <div className="rounded-xl border border-[#1e2638] bg-[#121620] p-4 space-y-1">
             <span className="text-slate-400 text-[11px]">ESTIMATED DURATION</span>
-            <div className="text-xl font-bold text-cyan-400">{inspection.estimated_duration_sec}s</div>
+            <div className="text-xl font-bold text-teal-400">{inspection.estimated_duration_sec}s</div>
             <div className="text-[10px] text-slate-500">Calculated @ 30.0 FPS</div>
           </div>
           <div className="rounded-xl border border-[#1e2638] bg-[#121620] p-4 space-y-1">
@@ -216,7 +216,7 @@ export const DatasetLabPage: React.FC = () => {
                   const stat = inspection.coordinate_ranges[col]
                   return (
                     <tr key={col}>
-                      <td className="py-2 font-bold text-cyan-400">{col.toUpperCase()}</td>
+                      <td className="py-2 font-bold text-teal-400">{col.toUpperCase()}</td>
                       <td className="py-2">{stat.min} px</td>
                       <td className="py-2">{stat.max} px</td>
                       <td className="py-2">{stat.mean.toFixed(1)} px</td>
@@ -237,7 +237,7 @@ export const DatasetLabPage: React.FC = () => {
           <div className="rounded-xl border border-[#1e2638] bg-[#121620] p-5 space-y-3">
             <div className="flex items-center justify-between border-b border-[#1e2638] pb-2 text-xs font-mono">
               <span className="text-white font-semibold flex items-center space-x-1.5">
-                <Maximize2 className="w-4 h-4 text-cyan-400" />
+                <Maximize2 className="w-4 h-4 text-teal-400" />
                 <span>2D TRAJECTORY PATH (CENTER X vs CENTER Y)</span>
               </span>
               <span className="text-slate-500 text-[11px]">Inverted Y (Video Canvas)</span>
@@ -335,7 +335,7 @@ export const DatasetLabPage: React.FC = () => {
               <Layers className="w-4 h-4 text-amber-400" />
               <span>SPATIAL COVERAGE & ZONE HEATMAP (4×4 GRID MATRIX)</span>
             </span>
-            <span className="text-cyan-400 font-mono text-xs">
+            <span className="text-teal-400 font-mono text-xs">
               Coverage: {processResult.spatial_coverage_pct}% of scene
             </span>
           </div>
@@ -369,7 +369,7 @@ export const DatasetLabPage: React.FC = () => {
         <div className="rounded-xl border border-[#1e2638] bg-[#121620] p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-[#1e2638] pb-2 text-xs font-mono">
             <span className="text-white font-semibold flex items-center space-x-1.5">
-              <Activity className="w-4 h-4 text-cyan-400" />
+              <Activity className="w-4 h-4 text-teal-400" />
               <span>CROSS-SCENARIO MOVEMENT BENCHMARK</span>
             </span>
             <span className="text-slate-400 text-[11px]">Normalized Comparison</span>
@@ -398,7 +398,7 @@ export const DatasetLabPage: React.FC = () => {
                     </td>
                     <td className="py-2.5">{c.frames}</td>
                     <td className="py-2.5">{c.duration_sec}s</td>
-                    <td className="py-2.5 text-cyan-400 font-semibold">{c.avg_speed_px_sec} px/s</td>
+                    <td className="py-2.5 text-teal-400 font-semibold">{c.avg_speed_px_sec} px/s</td>
                     <td className="py-2.5">{c.speed_p50} px/s</td>
                     <td className="py-2.5 text-amber-400 font-semibold">{c.speed_p95} px/s</td>
                     <td className="py-2.5">{c.total_displacement_px} px</td>

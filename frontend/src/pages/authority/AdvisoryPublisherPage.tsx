@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   Shield,
   Smartphone,
+  AlertTriangle,
 } from 'lucide-react'
 import { AuthorityLayout } from '../../layouts/AuthorityLayout'
 import {
@@ -65,7 +66,7 @@ export const AdvisoryPublisherPage: React.FC = () => {
         affected_radius_km: radiusKm,
         officer_name: user?.name || 'Insp. Rajesh Deshmukh',
       })
-      setSuccessMsg('Advisory successfully broadcasted to all citizens in the target perimeter.')
+      setSuccessMsg('Advisory broadcasted to citizens in the designated perimeter.')
     } catch (err: any) {
       alert(`Publishing failed: ${err.message}`)
     } finally {
@@ -80,16 +81,16 @@ export const AdvisoryPublisherPage: React.FC = () => {
       <div className="space-y-6 max-w-6xl">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center space-x-2">
-            <Radio className="w-5 h-5 text-rose-500 animate-pulse" />
-            <span>Public Safety Advisory Broadcast Console</span>
+            <Radio className="w-5 h-5 text-amber-400" />
+            <span>Broadcast Public Safety Advisory</span>
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-sm text-slate-400 mt-0.5">
             Draft, review, and geofence official crowd-divergence alerts directly to the citizen portal.
           </p>
         </div>
 
         {successMsg && (
-          <div className="p-4 rounded-xl border border-emerald-800 bg-emerald-950/40 text-emerald-300 font-mono text-xs flex items-center space-x-2">
+          <div className="p-4 rounded-xl border border-[#38845B]/40 bg-[#38845B]/10 text-emerald-300 text-sm flex items-center space-x-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>{successMsg}</span>
           </div>
@@ -97,19 +98,19 @@ export const AdvisoryPublisherPage: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Form (7 cols) */}
-          <div className="lg:col-span-7 rounded-2xl bg-[#0e111a] border border-[#1b2233] p-6 shadow-xl space-y-5">
-            <h2 className="font-mono font-bold text-white text-sm uppercase tracking-wider flex items-center space-x-2">
-              <Shield className="w-4 h-4 text-emerald-400" />
+          <div className="lg:col-span-7 rounded-2xl bg-[#161D29] border border-[#253144] p-6 shadow-xl space-y-5">
+            <h2 className="font-semibold text-white text-base flex items-center space-x-2">
+              <Shield className="w-4 h-4 text-[#176B65]" />
               <span>Advisory Composition</span>
             </h2>
 
-            <form onSubmit={handlePublish} className="space-y-4 font-mono text-xs">
+            <form onSubmit={handlePublish} className="space-y-4 text-sm">
               <div>
-                <label className="block text-slate-400 mb-1">TARGET INCIDENT LOCATION</label>
+                <label className="block text-xs font-semibold text-slate-400 mb-1.5">Target Location & Incident</label>
                 <select
                   value={selectedIncidentId}
                   onChange={(e) => handleIncidentSelect(e.target.value)}
-                  className="w-full bg-[#121620] border border-[#273247] rounded-xl p-2.5 text-white"
+                  className="w-full bg-[#101520] border border-[#253144] rounded-xl p-3 text-white focus:outline-none focus:border-[#176B65]"
                 >
                   {incidents.map((inc) => (
                     <option key={inc.id} value={inc.id}>
@@ -120,46 +121,47 @@ export const AdvisoryPublisherPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">BROADCAST HEADLINE (PLAIN-ENGLISH)</label>
+                <label className="block text-xs font-semibold text-slate-400 mb-1.5">Broadcast Headline (Clear & Practical)</label>
                 <input
                   type="text"
                   value={headline}
                   onChange={(e) => setHeadline(e.target.value)}
                   required
-                  placeholder="e.g. Extreme Congestion: Avoid Main Concourse"
-                  className="w-full bg-[#121620] border border-[#273247] rounded-xl p-2.5 text-white"
+                  placeholder="e.g., Extreme Congestion: Avoid Main Concourse"
+                  className="w-full bg-[#101520] border border-[#253144] rounded-xl p-3 text-white placeholder-slate-500 focus:outline-none focus:border-[#176B65]"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">RECOMMENDED CITIZEN ACTIONS</label>
+                <label className="block text-xs font-semibold text-slate-400 mb-1.5">Recommended Public Action</label>
                 <textarea
                   value={publicAction}
                   onChange={(e) => setPublicAction(e.target.value)}
                   required
                   rows={3}
-                  placeholder="e.g. Avoid Station North Exit. Emergency services deployed; please divert via Shivaji Bridge."
-                  className="w-full bg-[#121620] border border-[#273247] rounded-xl p-2.5 text-white"
+                  placeholder="e.g., Avoid Station North Exit. Emergency services deployed; please divert via Shivaji Bridge."
+                  className="w-full bg-[#101520] border border-[#253144] rounded-xl p-3 text-white placeholder-slate-500 focus:outline-none focus:border-[#176B65] resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-slate-400 mb-1">URGENCY SEVERITY</label>
+                  <label className="block text-xs font-semibold text-slate-400 mb-1.5">Urgency Level</label>
                   <select
                     value={severity}
                     onChange={(e) => setSeverity(e.target.value as any)}
-                    className="w-full bg-[#121620] border border-[#273247] rounded-xl p-2.5 text-white"
+                    className="w-full bg-[#101520] border border-[#253144] rounded-xl p-3 text-white focus:outline-none focus:border-[#176B65]"
                   >
-                    <option value="YELLOW">YELLOW (Elevated Congestion)</option>
-                    <option value="RED">RED (Critical Avoidance / Danger)</option>
+                    <option value="YELLOW">Advisory (Elevated Congestion)</option>
+                    <option value="RED">High Warning (Critical Avoidance)</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 mb-1">
-                    GEOFENCE RADIUS: <strong className="text-cyan-400">{radiusKm} km</strong>
-                  </label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-semibold text-slate-400">Broadcast Radius</label>
+                    <span className="text-xs font-bold text-teal-400">{radiusKm} km</span>
+                  </div>
                   <input
                     type="range"
                     min="0.5"
@@ -167,19 +169,20 @@ export const AdvisoryPublisherPage: React.FC = () => {
                     step="0.5"
                     value={radiusKm}
                     onChange={(e) => setRadiusKm(parseFloat(e.target.value))}
-                    className="w-full mt-2 accent-cyan-400 cursor-pointer"
+                    className="w-full mt-2 accent-[#176B65] cursor-pointer"
                   />
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#090b10] border border-[#1b2233] text-[11px] text-slate-400">
-                Authorized Officer: <strong className="text-white">{user?.name || 'Insp. Rajesh Deshmukh'}</strong> • Badge: <strong className="text-white">{user?.badgeId || 'MH-PN-2041'}</strong>
+              <div className="p-3.5 rounded-xl bg-[#101520] border border-[#253144] text-xs text-slate-400 flex items-center justify-between">
+                <span>Authorized Officer: <strong className="text-white">{user?.name || 'Insp. Rajesh Deshmukh'}</strong></span>
+                <span>Badge: <strong className="text-white">{user?.badgeId || 'MH-PN-2041'}</strong></span>
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center justify-center space-x-2 transition-all shadow-lg shadow-rose-950 disabled:opacity-50"
+                className="w-full py-3.5 px-4 rounded-xl bg-[#176B65] hover:bg-[#12544F] text-white font-medium text-sm flex items-center justify-center space-x-2 transition-all shadow-md disabled:opacity-50 cursor-pointer"
               >
                 <Send className="w-4 h-4" />
                 <span>{loading ? 'Transmitting Geofenced Broadcast...' : 'Broadcast Public Safety Advisory'}</span>
@@ -188,58 +191,59 @@ export const AdvisoryPublisherPage: React.FC = () => {
           </div>
 
           {/* Right Live Citizen Preview (5 cols) */}
-          <div className="lg:col-span-5 rounded-2xl bg-[#0e111a] border border-[#1b2233] p-6 shadow-xl space-y-4">
-            <div className="flex items-center justify-between border-b border-[#1b2233] pb-3">
-              <span className="font-mono text-xs font-bold text-slate-300 flex items-center space-x-1.5">
-                <Smartphone className="w-4 h-4 text-cyan-400" />
-                <span>CITIZEN FEED LIVE PREVIEW</span>
+          <div className="lg:col-span-5 rounded-2xl bg-[#161D29] border border-[#253144] p-6 shadow-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-[#253144] pb-3">
+              <span className="text-xs font-semibold text-slate-300 flex items-center space-x-2">
+                <Smartphone className="w-4 h-4 text-teal-400" />
+                <span>Citizen Live Preview</span>
               </span>
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
-                WYSIWYG
+              <span className="text-[11px] font-medium text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-800">
+                Live Public View
               </span>
             </div>
 
-            <p className="text-[11px] font-mono text-slate-400">
-              This card renders exactly how an ordinary person in {selectedIncident?.city || 'Pune'} will see the warning on their smartphone or browser.
+            <p className="text-xs text-slate-400">
+              This is how your advisory appears to citizens in {selectedIncident?.city || 'Pune'} on smartphones and browsers.
             </p>
 
-            {/* Mock Citizen Card */}
-            <div className="p-4 rounded-xl border border-cyan-500/40 bg-[#121824] space-y-3 shadow-lg">
+            {/* True Civic Card Preview (Warm Off-white styling) */}
+            <div className="p-5 rounded-2xl bg-[#FFFFFF] border border-[#DFE2DC] shadow-md space-y-3.5 text-[#202522]">
               <div className="flex items-center justify-between">
                 <span
-                  className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
+                  className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                     severity === 'RED'
-                      ? 'bg-rose-950 text-rose-300 border border-rose-800'
-                      : 'bg-amber-950 text-amber-300 border border-amber-800'
+                      ? 'bg-[#C94C4C]/10 text-[#C94C4C] border border-[#C94C4C]/20'
+                      : 'bg-[#D69B32]/10 text-[#D69B32] border border-[#D69B32]/20'
                   }`}
                 >
-                  {severity} ADVISORY
+                  {severity === 'RED' ? 'High Warning' : 'Safety Advisory'}
                 </span>
-                <span className="text-[10px] font-mono text-slate-400">Just Now</span>
+                <span className="text-xs text-[#777D78]">Just now</span>
               </div>
 
               <div>
-                <h3 className="text-sm font-bold text-white leading-snug">
+                <h3 className="text-base font-bold text-[#202522] leading-snug">
                   {headline || 'Advisory Headline'}
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5 flex items-center space-x-1">
-                  <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                  <span>{selectedIncident?.locality || 'Selected Locality'}, {selectedIncident?.city || 'City'}</span>
+                <p className="text-xs text-[#777D78] mt-1 flex items-center space-x-1">
+                  <MapPin className="w-3.5 h-3.5 text-[#176B65] shrink-0" />
+                  <span>{selectedIncident?.locality || 'Selected Area'}, {selectedIncident?.city || 'City'}</span>
                 </p>
               </div>
 
-              <div className="p-3 rounded-lg bg-[#080b10] border border-[#1b2233] space-y-1">
-                <div className="text-[10px] font-mono font-bold text-cyan-400 uppercase">
-                  WHAT SHOULD YOU DO?
+              <div className="p-3.5 rounded-xl bg-[#F6F5F0] border border-[#DFE2DC] space-y-1">
+                <div className="text-[11px] font-bold text-[#176B65] uppercase tracking-wider flex items-center space-x-1">
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                  <span>What should you do?</span>
                 </div>
-                <div className="text-xs text-slate-200 leading-relaxed font-sans">
+                <div className="text-xs text-[#202522] leading-relaxed">
                   {publicAction || 'Specific safety guidance will appear here.'}
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-[#1b2233] flex items-center justify-between text-[10px] font-mono text-slate-500">
-                <span>By Pune Traffic & Safety Command</span>
-                <span className="text-cyan-400 font-bold">~1.2 km away</span>
+              <div className="pt-2 border-t border-[#DFE2DC] flex items-center justify-between text-xs text-[#777D78]">
+                <span>Pune Emergency Operations</span>
+                <span className="font-semibold text-[#176B65]">Within {radiusKm} km</span>
               </div>
             </div>
           </div>

@@ -13,15 +13,15 @@ interface CrowdMap3DProps {
 }
 
 // 4 Venue Zones mapped to 3D coordinates [-10 to +10 on X, -6 to +6 on Z]
+// Using refined, dignified tones matching the executive palette
 const ZONES_3D = [
-  { id: 'zone_1', name: 'Zone 1: Ingress Gate', color: '#06b6d4', minX: -10, maxX: 0, minZ: -6, maxZ: 0 },
-  { id: 'zone_2', name: 'Zone 2: Concourse Crossflow', color: '#3b82f6', minX: 0, maxX: 10, minZ: -6, maxZ: 0 },
-  { id: 'zone_3', name: 'Zone 3: Central Concourse', color: '#10b981', minX: -10, maxX: 0, minZ: 0, maxZ: 6 },
-  { id: 'zone_4', name: 'Zone 4: Bottleneck Egress', color: '#f59e0b', minX: 0, maxX: 10, minZ: 0, maxZ: 6 },
+  { id: 'zone_1', name: 'Sector A: Ingress North', color: '#176B65', minX: -10, maxX: 0, minZ: -6, maxZ: 0 },
+  { id: 'zone_2', name: 'Sector B: Concourse Crossway', color: '#2B4C7E', minX: 0, maxX: 10, minZ: -6, maxZ: 0 },
+  { id: 'zone_3', name: 'Sector C: Central Assembly', color: '#38845B', minX: -10, maxX: 0, minZ: 0, maxZ: 6 },
+  { id: 'zone_4', name: 'Sector D: South Exit Corridor', color: '#D69B32', minX: 0, maxX: 10, minZ: 0, maxZ: 6 },
 ]
 
 function map2Dto3D(cx: number, cy: number): [number, number, number] {
-  // Map 1920x1080 to [-10, 10] on X and [-6, 6] on Z
   const x3d = (cx / 1920) * 20 - 10
   const z3d = (cy / 1080) * 12 - 6
   return [x3d, 0.4, z3d]
@@ -32,26 +32,26 @@ const PedestrianAgent: React.FC<{ point: TrajectoryPoint }> = ({ point }) => {
   const pos = useMemo(() => map2Dto3D(point.center_x, point.center_y), [point.center_x, point.center_y])
 
   // Color gradient based on speed
-  const color = point.speed_px_sec > 60 ? '#10b981' : point.speed_px_sec > 25 ? '#06b6d4' : '#f59e0b'
+  const color = point.speed_px_sec > 60 ? '#38845B' : point.speed_px_sec > 25 ? '#176B65' : '#D69B32'
 
   return (
     <group position={pos}>
       {/* Pedestrian Capsule / Cylinder Body */}
       <mesh ref={meshRef} castShadow position={[0, 0.4, 0]}>
         <cylinderGeometry args={[0.2, 0.25, 0.8, 16]} />
-        <meshStandardMaterial color={color} roughness={0.3} metalness={0.2} emissive={color} emissiveIntensity={0.2} />
+        <meshStandardMaterial color={color} roughness={0.4} metalness={0.1} />
       </mesh>
 
       {/* Head */}
       <mesh position={[0, 0.95, 0]}>
         <sphereGeometry args={[0.16, 16, 16]} />
-        <meshStandardMaterial color="#f0f4f8" roughness={0.4} />
+        <meshStandardMaterial color="#E8ECE9" roughness={0.5} />
       </mesh>
 
       {/* Ground Projection Halo */}
       <mesh position={[0, -0.38, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.25, 0.35, 24]} />
-        <meshBasicMaterial color={color} transparent opacity={0.6} side={THREE.DoubleSide} />
+        <meshBasicMaterial color={color} transparent opacity={0.45} side={THREE.DoubleSide} />
       </mesh>
     </group>
   )
@@ -72,7 +72,7 @@ const DensityColumns: React.FC<{ gridOccupancy?: SpatialGridSummary }> = ({ grid
           const z = (rIdx / rows) * 12 - 6 + 1.5 / 2
           const height = Math.min(3.5, Math.max(0.1, (val / 100) * 1.5))
           const intensity = Math.min(1.0, val / 150)
-          const colColor = intensity > 0.6 ? '#f43f5e' : intensity > 0.3 ? '#f59e0b' : '#06b6d4'
+          const colColor = intensity > 0.6 ? '#C94C4C' : intensity > 0.3 ? '#D69B32' : '#176B65'
 
           return (
             <mesh key={`${rIdx}-${cIdx}`} position={[x, height / 2, z]}>
@@ -80,8 +80,8 @@ const DensityColumns: React.FC<{ gridOccupancy?: SpatialGridSummary }> = ({ grid
               <meshStandardMaterial
                 color={colColor}
                 transparent
-                opacity={0.35}
-                roughness={0.2}
+                opacity={0.3}
+                roughness={0.4}
                 wireframe={false}
               />
             </mesh>
@@ -120,8 +120,8 @@ const VenueZones3D: React.FC<{
               <meshStandardMaterial
                 color={z.color}
                 transparent
-                opacity={isSelected ? 0.35 : 0.12}
-                roughness={0.6}
+                opacity={isSelected ? 0.3 : 0.12}
+                roughness={0.7}
               />
             </mesh>
 
@@ -129,7 +129,7 @@ const VenueZones3D: React.FC<{
             <Text
               position={[centerX, 0.05, centerZ]}
               rotation={[-Math.PI / 2, 0, 0]}
-              fontSize={0.5}
+              fontSize={0.45}
               color={isSelected ? '#ffffff' : z.color}
               anchorX="center"
               anchorY="middle"
@@ -153,16 +153,16 @@ export const CrowdMap3D: React.FC<CrowdMap3DProps> = ({
   const activePoint = trajectories[currentFrameIdx] || trajectories[0]
 
   return (
-    <div className="w-full h-full relative bg-[#07090c] rounded-xl overflow-hidden border border-[#1e2638]">
+    <div className="w-full h-full relative bg-[#0E131C] rounded-2xl overflow-hidden border border-[#253144]">
       <Canvas
         camera={{ position: [0, 14, 14], fov: 45 }}
         shadows
         className="cursor-grab active:cursor-grabbing"
       >
-        <color attach="background" args={['#07090c']} />
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[10, 20, 10]} intensity={1.2} castShadow />
-        <pointLight position={[0, 5, 0]} intensity={0.5} color="#06b6d4" />
+        <color attach="background" args={['#0E131C']} />
+        <ambientLight intensity={0.7} />
+        <directionalLight position={[10, 20, 10]} intensity={1.1} castShadow />
+        <pointLight position={[0, 6, 0]} intensity={0.4} color="#A8B9A7" />
 
         {/* Orbit Controls */}
         <OrbitControls
@@ -173,14 +173,14 @@ export const CrowdMap3D: React.FC<CrowdMap3DProps> = ({
           maxDistance={35}
         />
 
-        {/* Architectural Venue Ground & Grid */}
-        <gridHelper args={[24, 24, '#2c3852', '#121620']} position={[0, 0, 0]} />
+        {/* Architectural Venue Ground & Subtle Grid */}
+        <gridHelper args={[24, 24, '#253144', '#161D29']} position={[0, 0, 0]} />
         <mesh position={[0, -0.05, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[26, 18]} />
-          <meshStandardMaterial color="#0b0e14" roughness={0.9} />
+          <meshStandardMaterial color="#111722" roughness={0.9} />
         </mesh>
 
-        {/* Venue Zones & Floating Labels */}
+        {/* Venue Zones & Floor Labels */}
         <VenueZones3D selectedZone={selectedZone} onSelectZone={onSelectZone} />
 
         {/* Volumetric Density Columns */}
@@ -190,33 +190,33 @@ export const CrowdMap3D: React.FC<CrowdMap3DProps> = ({
         {activePoint && <PedestrianAgent point={activePoint} />}
       </Canvas>
 
-      {/* Floating 3D Legend & Interaction Help */}
-      <div className="absolute top-4 left-4 p-3 rounded-lg bg-[#0a0c10]/90 backdrop-blur-md border border-[#1e2638] font-mono text-[11px] text-slate-300 space-y-1.5 shadow-lg pointer-events-none">
-        <div className="text-cyan-400 font-bold flex items-center space-x-1.5">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-          <span>REAL-DATA 3D SPATIAL VISUALIZATION</span>
+      {/* Floating Spatial Information Overlay (Executive Clean Styling) */}
+      <div className="absolute top-4 left-4 p-3.5 rounded-xl bg-[#161D29]/95 backdrop-blur-md border border-[#253144] text-xs text-slate-300 space-y-1.5 shadow-xl pointer-events-none">
+        <div className="font-semibold text-white flex items-center space-x-2">
+          <span className="w-2 h-2 rounded-full bg-[#176B65]" />
+          <span>Venue Spatial Flow Dynamics</span>
         </div>
-        <div className="text-slate-400 text-[10px]">
-          Mapped from 1920×1080 image space to 3D floor units
+        <div className="text-slate-400 text-[11px]">
+          Mapped from camera footage space to physical venue sectors
         </div>
-        <div className="flex items-center space-x-3 pt-1 text-[10px]">
-          <span className="flex items-center space-x-1">
-            <span className="w-2 h-2 rounded bg-emerald-400" />
-            <span>Fast Flow</span>
+        <div className="flex items-center space-x-3 pt-1 text-[11px]">
+          <span className="flex items-center space-x-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#38845B]" />
+            <span className="text-slate-300">Fluid flow</span>
           </span>
-          <span className="flex items-center space-x-1">
-            <span className="w-2 h-2 rounded bg-cyan-400" />
-            <span>Nominal</span>
+          <span className="flex items-center space-x-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#176B65]" />
+            <span className="text-slate-300">Moderate pace</span>
           </span>
-          <span className="flex items-center space-x-1">
-            <span className="w-2 h-2 rounded bg-amber-400" />
-            <span>Compressed</span>
+          <span className="flex items-center space-x-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#D69B32]" />
+            <span className="text-slate-300">Constrained</span>
           </span>
         </div>
       </div>
 
-      <div className="absolute bottom-4 right-4 p-2 rounded bg-black/70 border border-[#2c3852] font-mono text-[10px] text-slate-400">
-        Left Click + Drag: Rotate | Right Click + Drag: Pan | Scroll: Zoom
+      <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-lg bg-[#161D29]/90 border border-[#253144] text-[11px] text-slate-400">
+        Left click + drag to rotate • Right click to pan • Scroll to zoom
       </div>
     </div>
   )

@@ -68,7 +68,7 @@ export const IncidentManagementPage: React.FC = () => {
         decision: verifyDecision,
         officer_name: user?.name || 'Insp. Rajesh Deshmukh',
         officer_badge: user?.badgeId || 'MH-PN-2041',
-        notes: officerNotes || 'Verified via live CCTV corridor feed.',
+        notes: officerNotes || 'Verified via corridor surveillance feed.',
       })
       setSelectedIncident(updated)
       setStatusMessage(`Incident successfully marked as ${verifyDecision}.`)
@@ -88,7 +88,7 @@ export const IncidentManagementPage: React.FC = () => {
     try {
       const updated = await resolveIncident(selectedIncident.id, {
         officer_name: user?.name || 'Insp. Rajesh Deshmukh',
-        resolution_notes: resolveNotes || 'Pedestrian density returned to nominal. Hazard resolved.',
+        resolution_notes: resolveNotes || 'Pedestrian density returned to nominal. Choke point cleared.',
       })
       setSelectedIncident(updated)
       setStatusMessage('Incident successfully marked as resolved.')
@@ -114,7 +114,7 @@ export const IncidentManagementPage: React.FC = () => {
         officer_name: user?.name || 'Insp. Rajesh Deshmukh',
       })
       setSelectedIncident(updated)
-      setStatusMessage('Public safety advisory broadcasted live!')
+      setStatusMessage('Public safety advisory broadcasted live.')
       setAdvisoryModalOpen(false)
       await loadIncidents()
     } catch (err: any) {
@@ -138,46 +138,46 @@ export const IncidentManagementPage: React.FC = () => {
   })
 
   return (
-    <AuthorityLayout breadcrumb="Incident Verification & Queue">
+    <AuthorityLayout breadcrumb="Incident Verification Queue">
       <div className="space-y-6">
         {/* Header Title */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#253144] pb-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center space-x-2">
-              <ShieldAlert className="w-5 h-5 text-emerald-400" />
+            <h1 className="text-xl font-semibold text-white tracking-tight flex items-center space-x-2">
+              <ShieldAlert className="w-5 h-5 text-[#176B65]" />
               <span>Incident Verification & Response Queue</span>
             </h1>
             <p className="text-xs text-slate-400 mt-0.5">
-              Strict 6-layer protocol: System CV Flag → Officer Review → Verification → Advisory Draft → Broadcast → Resolution
+              Review flagged crowd conditions, confirm footage observations, and dispatch public advisories.
             </p>
           </div>
 
           <button
             onClick={loadIncidents}
-            className="self-start sm:self-auto flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#121620] border border-[#273247] hover:border-emerald-500 font-mono text-xs text-slate-300 transition-colors"
+            className="self-start sm:self-auto flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#161D29] border border-[#253144] hover:border-[#176B65] text-xs font-medium text-slate-300 transition-colors"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-emerald-400' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-[#176B65]' : ''}`} />
             <span>Refresh Queue</span>
           </button>
         </div>
 
         {statusMessage && (
-          <div className="p-3 rounded-xl border border-emerald-800 bg-emerald-950/40 text-emerald-300 font-mono text-xs flex items-center justify-between">
+          <div className="p-3.5 rounded-xl border border-[#38845B]/40 bg-[#38845B]/10 text-[#D1EBDD] text-xs flex items-center justify-between">
             <span>{statusMessage}</span>
-            <button onClick={() => setStatusMessage(null)} className="text-emerald-400 font-bold ml-2">
+            <button onClick={() => setStatusMessage(null)} className="text-[#A8B9A7] font-semibold ml-2">
               Dismiss
             </button>
           </div>
         )}
 
         {/* Tab Controls */}
-        <div className="flex items-center space-x-2 border-b border-[#1b2233] pb-3 font-mono text-xs">
+        <div className="flex items-center space-x-2 text-xs">
           <button
             onClick={() => setActiveTab('AWAITING_REVIEW')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-colors ${
+            className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
               activeTab === 'AWAITING_REVIEW'
-                ? 'bg-amber-950 text-amber-300 border border-amber-800'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[#176B65] text-white'
+                : 'text-slate-400 hover:text-white bg-[#161D29] border border-[#253144]'
             }`}
           >
             Awaiting Review ({incidents.filter((i) => i.status === 'detected_by_system' || i.status === 'awaiting_review').length})
@@ -185,10 +185,10 @@ export const IncidentManagementPage: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('VERIFIED')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-colors ${
+            className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
               activeTab === 'VERIFIED'
-                ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[#176B65] text-white'
+                : 'text-slate-400 hover:text-white bg-[#161D29] border border-[#253144]'
             }`}
           >
             Active & Verified ({incidents.filter((i) => i.status === 'verified' || i.status === 'advisory_published').length})
@@ -196,22 +196,22 @@ export const IncidentManagementPage: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('RESOLVED')}
-            className={`px-3 py-1.5 rounded-lg font-bold transition-colors ${
+            className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
               activeTab === 'RESOLVED'
-                ? 'bg-[#181f2e] text-slate-200 border border-[#2b374f]'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[#176B65] text-white'
+                : 'text-slate-400 hover:text-white bg-[#161D29] border border-[#253144]'
             }`}
           >
-            Closed / Dismissed ({incidents.filter((i) => i.status === 'resolved' || i.status === 'dismissed').length})
+            Closed ({incidents.filter((i) => i.status === 'resolved' || i.status === 'dismissed').length})
           </button>
         </div>
 
         {/* Main Grid: Queue List + Detailed Review Panel */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left: Queue items (5 cols) */}
           <div className="lg:col-span-5 space-y-3">
             {filteredIncidents.length === 0 ? (
-              <div className="p-8 rounded-2xl bg-[#0e111a] border border-[#1b2233] text-center font-mono text-xs text-slate-500">
+              <div className="p-8 rounded-xl bg-[#161D29] border border-[#253144] text-center text-xs text-slate-500">
                 No incidents in this status queue.
               </div>
             ) : (
@@ -223,39 +223,39 @@ export const IncidentManagementPage: React.FC = () => {
                     onClick={() => setSelectedIncident(inc)}
                     className={`p-4 rounded-xl border transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-[#131926] border-emerald-500 shadow-lg ring-1 ring-emerald-500/30'
-                        : 'bg-[#0e111a] border-[#1b2233] hover:border-[#28354d]'
+                        ? 'bg-[#1B2333] border-[#176B65] shadow-xs ring-1 ring-[#176B65]/30'
+                        : 'bg-[#161D29] border-[#253144] hover:border-slate-600'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span
-                        className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase ${
+                        className={`text-[10px] px-2 py-0.5 rounded font-semibold uppercase ${
                           inc.severity === 'RED'
-                            ? 'bg-rose-950 text-rose-300 border border-rose-800'
+                            ? 'bg-[#C94C4C]/20 text-[#F8D7D7]'
                             : inc.severity === 'YELLOW'
-                            ? 'bg-amber-950 text-amber-300 border border-amber-800'
-                            : 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                            ? 'bg-[#D69B32]/20 text-[#FBEAC9]'
+                            : 'bg-[#38845B]/20 text-[#D1EBDD]'
                         }`}
                       >
-                        {inc.severity}
+                        {inc.severity === 'RED' ? 'Critical' : inc.severity === 'YELLOW' ? 'Moderate' : 'Normal'}
                       </span>
-                      <span className="text-[10px] font-mono text-slate-500">
+                      <span className="text-[10px] text-slate-400">
                         {new Date(inc.reported_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
 
-                    <h3 className="mt-2 text-sm font-bold text-white leading-snug">{inc.title}</h3>
+                    <h3 className="mt-2 text-sm font-semibold text-white leading-snug">{inc.title}</h3>
                     <p className="text-xs text-slate-400 mt-0.5">{inc.locality}, {inc.city}</p>
 
-                    <div className="mt-3 pt-2 border-t border-[#1b2233] flex items-center justify-between font-mono text-[11px]">
-                      <span className="text-slate-500 uppercase">{inc.status.replace(/_/g, ' ')}</span>
+                    <div className="mt-3 pt-2 border-t border-[#253144] flex items-center justify-between text-[11px]">
+                      <span className="text-slate-400 capitalize">{inc.status.replace(/_/g, ' ')}</span>
                       {inc.is_verified ? (
-                        <span className="text-emerald-400 flex items-center space-x-1">
+                        <span className="text-[#38845B] flex items-center space-x-1 font-medium">
                           <ShieldCheck className="w-3 h-3" />
                           <span>Verified</span>
                         </span>
                       ) : (
-                        <span className="text-amber-400">Needs Review</span>
+                        <span className="text-[#D69B32] font-medium">Needs Review</span>
                       )}
                     </div>
                   </div>
@@ -267,25 +267,25 @@ export const IncidentManagementPage: React.FC = () => {
           {/* Right: Detailed Inspection & Operational Actions (7 cols) */}
           <div className="lg:col-span-7">
             {selectedIncident ? (
-              <div className="rounded-2xl bg-[#0e111a] border border-[#1b2233] p-6 shadow-xl space-y-6">
+              <div className="rounded-xl bg-[#161D29] border border-[#253144] p-6 shadow-xs space-y-6">
                 {/* Header */}
-                <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#1b2233] pb-4">
+                <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#253144] pb-4">
                   <div>
                     <div className="flex items-center space-x-2">
                       <span
-                        className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
+                        className={`text-[10px] font-semibold px-2 py-0.5 rounded uppercase ${
                           selectedIncident.severity === 'RED'
-                            ? 'bg-rose-950 text-rose-300 border border-rose-800'
+                            ? 'bg-[#C94C4C]/20 text-[#F8D7D7]'
                             : selectedIncident.severity === 'YELLOW'
-                            ? 'bg-amber-950 text-amber-300 border border-amber-800'
-                            : 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                            ? 'bg-[#D69B32]/20 text-[#FBEAC9]'
+                            : 'bg-[#38845B]/20 text-[#D1EBDD]'
                         }`}
                       >
-                        {selectedIncident.severity} PRIORITY
+                        {selectedIncident.severity}
                       </span>
-                      <span className="text-xs font-mono text-slate-500">ID: {selectedIncident.id}</span>
+                      <span className="text-xs text-slate-500">Record #{selectedIncident.id}</span>
                     </div>
-                    <h2 className="mt-2 text-xl font-bold text-white">{selectedIncident.title}</h2>
+                    <h2 className="mt-2 text-lg font-semibold text-white">{selectedIncident.title}</h2>
                     <p className="text-xs text-slate-400 mt-0.5">
                       {selectedIncident.locality}, {selectedIncident.city}, {selectedIncident.state}
                     </p>
@@ -293,14 +293,14 @@ export const IncidentManagementPage: React.FC = () => {
 
                   {/* Actions Header Bar */}
                   <div className="flex flex-wrap items-center gap-2">
-                    {/* If awaiting review: show Verify button */}
+                    {/* Verify button */}
                     {!selectedIncident.is_verified && selectedIncident.status !== 'resolved' && (
                       <button
                         onClick={() => {
                           setVerifyDecision('verified')
                           setVerifyingModalOpen(true)
                         }}
-                        className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-black font-mono font-bold text-xs flex items-center space-x-1 transition-colors"
+                        className="px-3 py-1.5 rounded-xl bg-[#176B65] hover:bg-[#12544F] text-white font-medium text-xs flex items-center space-x-1.5 transition-colors"
                       >
                         <ShieldCheck className="w-3.5 h-3.5" />
                         <span>Verify Incident</span>
@@ -316,9 +316,9 @@ export const IncidentManagementPage: React.FC = () => {
                           setAdvSeverity(selectedIncident.severity)
                           setAdvisoryModalOpen(true)
                         }}
-                        className="px-3 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-black font-mono font-bold text-xs flex items-center space-x-1 transition-colors"
+                        className="px-3 py-1.5 rounded-xl bg-[#1B2333] hover:bg-[#253144] text-slate-200 border border-[#2B3950] font-medium text-xs flex items-center space-x-1.5 transition-colors"
                       >
-                        <Send className="w-3.5 h-3.5" />
+                        <Send className="w-3.5 h-3.5 text-[#176B65]" />
                         <span>{selectedIncident.advisory ? 'Update Advisory' : 'Draft Advisory'}</span>
                       </button>
                     )}
@@ -327,7 +327,7 @@ export const IncidentManagementPage: React.FC = () => {
                     {selectedIncident.status !== 'resolved' && (
                       <button
                         onClick={() => setResolveModalOpen(true)}
-                        className="px-3 py-1.5 rounded-xl bg-[#181f2e] hover:bg-[#202738] text-slate-200 border border-[#2b374f] font-mono text-xs font-bold transition-colors"
+                        className="px-3 py-1.5 rounded-xl border border-[#253144] text-slate-300 hover:text-white text-xs font-medium transition-colors"
                       >
                         <span>Mark Resolved</span>
                       </button>
@@ -337,33 +337,33 @@ export const IncidentManagementPage: React.FC = () => {
 
                 {/* Supporting Sensor & CV Evidence */}
                 <div>
-                  <h4 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider mb-2">
-                    SUPPORTING COMPUTER-VISION EVIDENCE
+                  <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                    Observed Movement Indicators
                   </h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
-                    <div className="p-3 rounded-xl bg-[#090b10] border border-[#1b2233]">
-                      <span className="text-[10px] text-slate-500 block">DETECTION SOURCE</span>
-                      <span className="text-white font-bold">{selectedIncident.source}</span>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                    <div className="p-3 rounded-lg bg-[#131924] border border-[#253144]">
+                      <span className="text-[10px] text-slate-500 uppercase block">Detection Source</span>
+                      <span className="text-white font-medium">{selectedIncident.source}</span>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-[#090b10] border border-[#1b2233]">
-                      <span className="text-[10px] text-slate-500 block">EST. PEDESTRIANS</span>
-                      <span className="text-cyan-400 font-bold">
+                    <div className="p-3 rounded-lg bg-[#131924] border border-[#253144]">
+                      <span className="text-[10px] text-slate-500 uppercase block">Pedestrians Detected</span>
+                      <span className="text-white font-semibold">
                         {selectedIncident.supporting_metrics?.detected_pedestrians || '142 count'}
                       </span>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-[#090b10] border border-[#1b2233]">
-                      <span className="text-[10px] text-slate-500 block">CONFLICT INDEX</span>
-                      <span className="text-amber-400 font-bold">
+                    <div className="p-3 rounded-lg bg-[#131924] border border-[#253144]">
+                      <span className="text-[10px] text-slate-500 uppercase block">Flow Congestion</span>
+                      <span className="text-[#D69B32] font-semibold">
                         {selectedIncident.supporting_metrics?.conflict_index || '0.74 (Elevated)'}
                       </span>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-[#090b10] border border-[#1b2233]">
-                      <span className="text-[10px] text-slate-500 block">CROWD VELOCITY</span>
-                      <span className="text-rose-400 font-bold">
-                        {selectedIncident.supporting_metrics?.velocity || '14.2 px/s (Slowed)'}
+                    <div className="p-3 rounded-lg bg-[#131924] border border-[#253144]">
+                      <span className="text-[10px] text-slate-500 uppercase block">Traversal Pace</span>
+                      <span className="text-white font-semibold">
+                        {selectedIncident.supporting_metrics?.velocity || '14.2 px/s'}
                       </span>
                     </div>
                   </div>
@@ -371,8 +371,8 @@ export const IncidentManagementPage: React.FC = () => {
 
                 {/* Description */}
                 <div>
-                  <h4 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider mb-1">
-                    INCIDENT DETAILS
+                  <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                    Situation Details
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed font-sans">
                     {selectedIncident.description}
@@ -381,50 +381,51 @@ export const IncidentManagementPage: React.FC = () => {
 
                 {/* Current Active Advisory */}
                 {selectedIncident.advisory && (
-                  <div className="p-4 rounded-xl border border-cyan-500/30 bg-cyan-950/20 space-y-2 font-mono text-xs">
-                    <div className="flex items-center justify-between text-cyan-400 font-bold">
+                  <div className="p-4 rounded-xl border border-[#176B65]/40 bg-[#176B65]/10 space-y-2 text-xs">
+                    <div className="flex items-center justify-between text-[#A8B9A7] font-semibold">
                       <span className="flex items-center space-x-1.5">
-                        <Send className="w-3.5 h-3.5" />
-                        <span>ACTIVE CITIZEN ADVISORY</span>
+                        <Send className="w-3.5 h-3.5 text-[#176B65]" />
+                        <span>Active Public Advisory Broadcast</span>
                       </span>
                       <span className="text-[10px] text-slate-400">
-                        Broadcasted: {new Date(selectedIncident.advisory.published_at).toLocaleTimeString()}
+                        {new Date(selectedIncident.advisory.published_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
-                    <div className="text-sm font-bold text-white">{selectedIncident.advisory.headline}</div>
+                    <div className="text-sm font-semibold text-white">{selectedIncident.advisory.headline}</div>
                     <div className="text-slate-300">
-                      <strong>Public Action:</strong> {selectedIncident.advisory.public_action}
+                      <strong>Instructions:</strong> {selectedIncident.advisory.public_action}
                     </div>
                     <div className="text-[11px] text-slate-400">
-                      Geofence: {selectedIncident.advisory.affected_radius_km} km radius • Issued by {selectedIncident.advisory.published_by}
+                      Coverage: {selectedIncident.advisory.affected_radius_km} km radius • Issued by {selectedIncident.advisory.published_by}
                     </div>
                   </div>
                 )}
 
                 {/* Action Audit Timeline */}
                 <div>
-                  <h4 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider mb-2">
-                    RESPONSE LOG & AUDIT HISTORY
+                  <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                    Response Timeline & Log
                   </h4>
-                  <div className="space-y-3 border-l-2 border-[#1b2233] ml-2 pl-4 font-mono text-xs">
+                  <div className="space-y-3 border-l-2 border-[#253144] ml-2 pl-4 text-xs">
                     {selectedIncident.timeline_updates?.map((item, idx) => (
                       <div key={idx} className="relative">
-                        <div className="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#0c0e14]" />
+                        <div className="absolute -left-[21px] top-1.5 w-2 h-2 rounded-full bg-[#176B65]" />
                         <div className="flex items-center space-x-2">
-                          <span className="text-white font-bold">{item.action}</span>
-                          <span className="text-[10px] text-slate-500">
-                            {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          <span className="text-white font-medium">{item.action}</span>
+                          <span className="text-[10px] text-slate-400">
+                            {item.timestamp ? new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                           </span>
-                          <span className="text-[10px] text-slate-400">by {item.author}</span>
                         </div>
-                        <p className="text-slate-300 text-xs font-sans mt-0.5">{item.message}</p>
+                        {item.message && (
+                          <p className="text-slate-400 text-xs mt-0.5">{item.message}</p>
+                        )}
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="p-12 rounded-2xl bg-[#0e111a] border border-[#1b2233] text-center font-mono text-xs text-slate-500">
+              <div className="p-12 rounded-xl bg-[#161D29] border border-[#253144] text-center text-xs text-slate-500">
                 Select an incident from the queue to inspect.
               </div>
             )}
@@ -433,23 +434,23 @@ export const IncidentManagementPage: React.FC = () => {
 
         {/* Verification Modal */}
         {verifyingModalOpen && selectedIncident && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-            <div className="max-w-md w-full bg-[#0d1017] border border-[#273247] rounded-2xl p-6 shadow-2xl space-y-4 font-mono text-xs">
-              <h3 className="font-bold text-white text-sm">Verify Incident Observation</h3>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+            <div className="max-w-md w-full bg-[#161D29] border border-[#253144] rounded-2xl p-6 shadow-xl space-y-4 text-xs">
+              <h3 className="font-semibold text-white text-base">Verify Incident Observation</h3>
               <p className="text-slate-400">
-                Are you confirming that CCTV footage indicates genuine crowd congestion for <strong>{selectedIncident.locality}</strong>?
+                Confirm whether footage observations indicate genuine crowd congestion for <strong>{selectedIncident.locality}</strong>.
               </p>
 
               <div>
-                <label className="block text-slate-400 mb-1">DECISION</label>
+                <label className="block text-slate-400 mb-1 font-medium">Decision</label>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => setVerifyDecision('verified')}
-                    className={`py-2 rounded-xl font-bold border transition-colors ${
+                    className={`py-2 rounded-xl font-medium border transition-colors ${
                       verifyDecision === 'verified'
-                        ? 'bg-emerald-950 text-emerald-300 border-emerald-600'
-                        : 'bg-[#121620] text-slate-400 border-[#1e2638]'
+                        ? 'bg-[#176B65] text-white border-[#176B65]'
+                        : 'bg-[#131924] text-slate-400 border-[#253144]'
                     }`}
                   >
                     Confirm Verified
@@ -457,10 +458,10 @@ export const IncidentManagementPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setVerifyDecision('dismissed')}
-                    className={`py-2 rounded-xl font-bold border transition-colors ${
+                    className={`py-2 rounded-xl font-medium border transition-colors ${
                       verifyDecision === 'dismissed'
-                        ? 'bg-rose-950 text-rose-300 border-rose-600'
-                        : 'bg-[#121620] text-slate-400 border-[#1e2638]'
+                        ? 'bg-[#C94C4C] text-white border-[#C94C4C]'
+                        : 'bg-[#131924] text-slate-400 border-[#253144]'
                     }`}
                   >
                     Dismiss (False Alarm)
@@ -469,27 +470,27 @@ export const IncidentManagementPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">OFFICER ASSESSMENT NOTES</label>
+                <label className="block text-slate-400 mb-1 font-medium">Officer Notes</label>
                 <textarea
                   value={officerNotes}
                   onChange={(e) => setOfficerNotes(e.target.value)}
                   placeholder="e.g. Visual confirmation of bottlenecking at Deccan exit. Density exceeding safety threshold."
                   rows={3}
-                  className="w-full bg-[#121620] border border-[#273247] rounded-xl p-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-[#131924] border border-[#253144] rounded-xl p-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-[#176B65]"
                 />
               </div>
 
               <div className="pt-2 flex items-center justify-end space-x-2">
                 <button
                   onClick={() => setVerifyingModalOpen(false)}
-                  className="px-3 py-2 rounded-xl bg-[#121620] border border-[#273247] text-slate-300 hover:text-white"
+                  className="px-3 py-2 rounded-xl border border-[#253144] text-slate-300 hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   disabled={actionLoading}
                   onClick={handleVerifySubmit}
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-black font-bold disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl bg-[#176B65] hover:bg-[#12544F] text-white font-medium disabled:opacity-50"
                 >
                   {actionLoading ? 'Recording...' : 'Commit Decision'}
                 </button>
@@ -500,49 +501,49 @@ export const IncidentManagementPage: React.FC = () => {
 
         {/* Advisory Modal */}
         {advisoryModalOpen && selectedIncident && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-            <div className="max-w-md w-full bg-[#0d1017] border border-[#273247] rounded-2xl p-6 shadow-2xl space-y-4 font-mono text-xs">
-              <h3 className="font-bold text-white text-sm">Broadcast Public Safety Advisory</h3>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+            <div className="max-w-md w-full bg-[#161D29] border border-[#253144] rounded-2xl p-6 shadow-xl space-y-4 text-xs">
+              <h3 className="font-semibold text-white text-base">Broadcast Public Safety Advisory</h3>
               <p className="text-slate-400">
-                This advisory will appear immediately on all citizen portals within the designated radius.
+                This advisory will appear immediately on the public portal for citizens within the selected radius.
               </p>
 
               <div>
-                <label className="block text-slate-400 mb-1">ADVISORY HEADLINE</label>
+                <label className="block text-slate-400 mb-1 font-medium">Headline</label>
                 <input
                   type="text"
                   value={advHeadline}
                   onChange={(e) => setAdvHeadline(e.target.value)}
-                  className="w-full bg-[#121620] border border-[#273247] rounded-xl p-2 text-white"
+                  className="w-full bg-[#131924] border border-[#253144] rounded-xl p-2 text-white"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">RECOMMENDED CITIZEN ACTION</label>
+                <label className="block text-slate-400 mb-1 font-medium">Recommended Citizen Action</label>
                 <textarea
                   value={advAction}
                   onChange={(e) => setAdvAction(e.target.value)}
                   placeholder="e.g. Avoid North concourse; proceed via Deccan Gymkhana connector."
                   rows={2}
-                  className="w-full bg-[#121620] border border-[#273247] rounded-xl p-2 text-white"
+                  className="w-full bg-[#131924] border border-[#253144] rounded-xl p-2 text-white"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-400 mb-1">SEVERITY LEVEL</label>
+                  <label className="block text-slate-400 mb-1 font-medium">Severity</label>
                   <select
                     value={advSeverity}
                     onChange={(e) => setAdvSeverity(e.target.value)}
-                    className="w-full bg-[#121620] border border-[#273247] rounded-xl p-2 text-white"
+                    className="w-full bg-[#131924] border border-[#253144] rounded-xl p-2 text-white"
                   >
-                    <option value="YELLOW">YELLOW (Congested)</option>
-                    <option value="RED">RED (Critical Avoid)</option>
+                    <option value="YELLOW">Moderate (Yellow)</option>
+                    <option value="RED">Critical / Avoid (Red)</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 mb-1">AFFECTED RADIUS (KM)</label>
+                  <label className="block text-slate-400 mb-1 font-medium">Radius (km)</label>
                   <input
                     type="number"
                     step="0.5"
@@ -550,7 +551,7 @@ export const IncidentManagementPage: React.FC = () => {
                     max="15"
                     value={advRadius}
                     onChange={(e) => setAdvRadius(parseFloat(e.target.value))}
-                    className="w-full bg-[#121620] border border-[#273247] rounded-xl p-2 text-white"
+                    className="w-full bg-[#131924] border border-[#253144] rounded-xl p-2 text-white"
                   />
                 </div>
               </div>
@@ -558,14 +559,14 @@ export const IncidentManagementPage: React.FC = () => {
               <div className="pt-2 flex items-center justify-end space-x-2">
                 <button
                   onClick={() => setAdvisoryModalOpen(false)}
-                  className="px-3 py-2 rounded-xl bg-[#121620] border border-[#273247] text-slate-300 hover:text-white"
+                  className="px-3 py-2 rounded-xl border border-[#253144] text-slate-300 hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   disabled={actionLoading}
                   onClick={handleAdvisorySubmit}
-                  className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-black font-bold disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl bg-[#176B65] hover:bg-[#12544F] text-white font-medium disabled:opacity-50"
                 >
                   {actionLoading ? 'Broadcasting...' : 'Broadcast to Public'}
                 </button>
@@ -576,35 +577,35 @@ export const IncidentManagementPage: React.FC = () => {
 
         {/* Resolve Modal */}
         {resolveModalOpen && selectedIncident && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-            <div className="max-w-md w-full bg-[#0d1017] border border-[#273247] rounded-2xl p-6 shadow-2xl space-y-4 font-mono text-xs">
-              <h3 className="font-bold text-white text-sm">Resolve Incident</h3>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+            <div className="max-w-md w-full bg-[#161D29] border border-[#253144] rounded-2xl p-6 shadow-xl space-y-4 text-xs">
+              <h3 className="font-semibold text-white text-base">Resolve Incident</h3>
               <p className="text-slate-400">
                 Marking this incident resolved will withdraw the active public warning and archive the event.
               </p>
 
               <div>
-                <label className="block text-slate-400 mb-1">RESOLUTION CLOSING REMARKS</label>
+                <label className="block text-slate-400 mb-1 font-medium">Resolution Notes</label>
                 <textarea
                   value={resolveNotes}
                   onChange={(e) => setResolveNotes(e.target.value)}
                   placeholder="e.g. Swargate corridor crowd cleared; normal traffic flow restored."
                   rows={3}
-                  className="w-full bg-[#121620] border border-[#273247] rounded-xl p-2.5 text-white"
+                  className="w-full bg-[#131924] border border-[#253144] rounded-xl p-2.5 text-white"
                 />
               </div>
 
               <div className="pt-2 flex items-center justify-end space-x-2">
                 <button
                   onClick={() => setResolveModalOpen(false)}
-                  className="px-3 py-2 rounded-xl bg-[#121620] border border-[#273247] text-slate-300 hover:text-white"
+                  className="px-3 py-2 rounded-xl border border-[#253144] text-slate-300 hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   disabled={actionLoading}
                   onClick={handleResolveSubmit}
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-black font-bold disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl bg-[#38845B] hover:bg-[#2F704D] text-white font-medium disabled:opacity-50"
                 >
                   {actionLoading ? 'Closing...' : 'Close Incident'}
                 </button>

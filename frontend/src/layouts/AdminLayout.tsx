@@ -8,7 +8,6 @@ import {
   LogOut,
   ChevronRight,
   ShieldCheck,
-  Activity,
 } from 'lucide-react'
 import { CrowdPulseLogo } from '../components/common/CrowdPulseLogo'
 import { getCurrentUser, logoutUser } from '../services/auth'
@@ -39,44 +38,39 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-[#07090d] text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-black">
+    <div className="min-h-screen bg-[#0E131C] text-slate-100 flex flex-col font-sans selection:bg-[#176B65] selection:text-white">
       {/* Top Admin Bar */}
-      <header className="sticky top-0 z-40 bg-[#0c0e14]/95 backdrop-blur-md border-b border-[#1b2233] px-4 sm:px-6 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-[#161D29]/95 backdrop-blur-md border-b border-[#253144] px-4 sm:px-6 h-16 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Link to="/admin" className="flex items-center">
             <CrowdPulseLogo size="sm" showTagline={false} />
-            <span className="hidden sm:inline-block ml-2.5 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">
-              PLATFORM ADMIN
+            <span className="hidden sm:inline-block ml-3 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#176B65]/20 text-teal-300 border border-[#176B65]/40">
+              Platform Admin
             </span>
           </Link>
 
-          <div className="hidden sm:flex items-center space-x-1.5 text-xs font-mono text-slate-400 pl-4 border-l border-[#1b2233]">
-            <span className="text-slate-500">Infrastructure</span>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
-            <span className="text-white font-bold">{breadcrumb}</span>
+          <div className="hidden sm:flex items-center space-x-2 text-xs text-slate-400 pl-4 border-l border-[#253144]">
+            <span className="text-slate-400">Infrastructure</span>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+            <span className="text-white font-medium">{breadcrumb}</span>
           </div>
         </div>
 
-        <div className="flex items-center space-x-3 font-mono text-xs">
-          <div className="hidden md:flex items-center space-x-2 text-slate-400 bg-[#121620] px-3 py-1 rounded-xl border border-[#273247]">
-            <Activity className="w-3.5 h-3.5 text-emerald-400" />
-            <span>FastAPI Backend 1.0 Online</span>
-          </div>
-
-          <div className="flex items-center space-x-2 pl-2 border-l border-[#1b2233]">
-            <div className="w-8 h-8 rounded-full bg-cyan-950 border border-cyan-700 flex items-center justify-center font-bold text-cyan-400">
+        <div className="flex items-center space-x-3 text-xs">
+          <div className="flex items-center space-x-2.5 pl-2">
+            <div className="w-8 h-8 rounded-full bg-[#101520] border border-[#253144] flex items-center justify-center font-bold text-teal-400 text-xs">
               AD
             </div>
             <div className="hidden lg:block text-left text-xs leading-none">
-              <div className="text-white font-bold">{user?.name || 'Platform Administrator'}</div>
-              <div className="text-[10px] text-slate-400 mt-0.5">Full System Access</div>
+              <div className="text-white font-medium">{user?.name || 'Platform Administrator'}</div>
+              <div className="text-[11px] text-slate-400 mt-1">Engineering Access</div>
             </div>
           </div>
 
           <button
             onClick={handleLogout}
             title="Sign out"
-            className="p-2 rounded-xl bg-[#111520] border border-[#222b40] text-slate-400 hover:text-rose-400 transition-colors"
+            className="p-2 rounded-xl bg-[#101520] border border-[#253144] text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
           </button>
@@ -86,9 +80,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
       {/* Main Body */}
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-64 bg-[#0a0c12] border-r border-[#1b2233] p-4 space-y-1 font-mono text-xs hidden md:block">
-          <div className="px-3 py-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-            ADMIN MODULES
+        <aside className="w-64 bg-[#111722] border-r border-[#253144] p-4 space-y-1 text-xs hidden md:block">
+          <div className="px-3 py-2 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+            Admin Modules
           </div>
 
           {navItems.map((item) => {
@@ -101,11 +95,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                 to={item.path}
                 className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium transition-colors ${
                   isActive
-                    ? 'bg-cyan-950/70 text-cyan-300 border border-cyan-800/80 font-bold'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-[#121622]'
+                    ? 'bg-[#176B65] text-white font-semibold shadow-sm'
+                    : 'text-slate-300 hover:text-white hover:bg-[#161D29]'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-cyan-400' : 'text-slate-500'}`} />
+                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
                 <span>{item.label}</span>
               </Link>
             )
@@ -114,19 +108,19 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           <div className="pt-8">
             <Link
               to="/authority"
-              className="flex items-center justify-between p-3 rounded-xl bg-[#0e121c] border border-[#20293d] text-slate-300 hover:border-emerald-500 hover:text-emerald-300 transition-colors"
+              className="flex items-center justify-between p-3 rounded-xl bg-[#161D29] border border-[#253144] text-slate-300 hover:border-[#176B65] hover:text-white transition-colors"
             >
               <div className="flex items-center space-x-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span className="font-bold">Authority Suite</span>
+                <ShieldCheck className="w-4 h-4 text-teal-400" />
+                <span className="font-medium">Authority Operations</span>
               </div>
               <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </aside>
 
-        {/* Content */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-[#07090d]">
+        {/* Content Area */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           {children}
         </main>
       </div>

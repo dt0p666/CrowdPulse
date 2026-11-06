@@ -2,45 +2,64 @@
 
 @layer base {
   :root {
-    --bg-main: #0a0c10;
-    --bg-card: #121620;
-    --bg-card-hover: #171d2b;
-    --border-subtle: #1e2638;
-    --border-accent: #2c3852;
-    --text-primary: #f0f4f8;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --accent-cyan: #06b6d4;
-    --accent-emerald: #10b981;
-    --accent-amber: #f59e0b;
-    --accent-rose: #f43f5e;
+    /* CrowdPulse Warm & Editorial Civic Palette */
+    --bg-primary: #F6F5F0;
+    --bg-secondary: #ECEDE8;
+    --bg-card: #FFFFFF;
+    --text-primary: #202522;
+    --text-secondary: #777D78;
+    --text-muted: #9BA19C;
+
+    --brand-teal: #176B65;
+    --brand-teal-hover: #12544F;
+    --brand-teal-light: #EBF4F3;
+    --accent-sage: #A8B9A7;
+    --border-subtle: #DFE2DC;
+    --border-card: #E5E8E2;
+
+    /* Status Colors */
+    --status-green: #38845B;
+    --status-green-bg: #EEF7F2;
+    --status-yellow: #D69B32;
+    --status-yellow-bg: #FEF8ED;
+    --status-red: #C94C4C;
+    --status-red-bg: #FDF2F2;
   }
 
   body {
-    background-color: var(--bg-main);
+    background-color: var(--bg-primary);
     color: var(--text-primary);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     overflow-x: hidden;
     margin: 0;
     padding: 0;
   }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.015em;
+  }
 }
 
-/* Custom scrollbars */
+/* Custom Refined Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0c10;
+  background: #F0EFEA;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e2638;
+  background: #CBD0C8;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2c3852;
+  background: #A8B0A5;
+}
+
+/* Leaflet Container Styling */
+.leaflet-container {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
 }

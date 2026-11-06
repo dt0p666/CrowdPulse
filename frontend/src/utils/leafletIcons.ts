@@ -9,24 +9,28 @@ L.Icon.Default.mergeOptions({
 })
 
 /**
- * Create modern pulse marker for incident maps
+ * Clean & Refined Marker for Verified Incident Locations
+ * Based on warm editorial status colors (#C94C4C, #D69B32, #38845B)
  */
 export function createSeverityIcon(severity: 'GREEN' | 'YELLOW' | 'RED') {
   const colorMap = {
     RED: {
-      bg: '#f43f5e',
-      border: '#fda4af',
-      ring: 'rgba(244, 63, 94, 0.4)',
+      bg: '#C94C4C',
+      border: '#FFFFFF',
+      ring: 'rgba(201, 76, 76, 0.25)',
+      shadow: 'rgba(201, 76, 76, 0.35)',
     },
     YELLOW: {
-      bg: '#f59e0b',
-      border: '#fde68a',
-      ring: 'rgba(245, 158, 11, 0.4)',
+      bg: '#D69B32',
+      border: '#FFFFFF',
+      ring: 'rgba(214, 155, 50, 0.25)',
+      shadow: 'rgba(214, 155, 50, 0.35)',
     },
     GREEN: {
-      bg: '#10b981',
-      border: '#a7f3d0',
-      ring: 'rgba(16, 185, 129, 0.4)',
+      bg: '#38845B',
+      border: '#FFFFFF',
+      ring: 'rgba(56, 132, 91, 0.25)',
+      shadow: 'rgba(56, 132, 91, 0.35)',
     },
   }
 
@@ -37,33 +41,32 @@ export function createSeverityIcon(severity: 'GREEN' | 'YELLOW' | 'RED') {
     html: `
       <div style="
         position: relative;
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
         display: flex;
         align-items: center;
         justify-content: center;
       ">
         <div style="
           position: absolute;
-          width: 24px;
-          height: 24px;
+          width: 22px;
+          height: 22px;
           border-radius: 50%;
           background: ${c.ring};
-          animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
         "></div>
         <div style="
-          width: 14px;
-          height: 14px;
+          width: 12px;
+          height: 12px;
           border-radius: 50%;
           background: ${c.bg};
           border: 2px solid ${c.border};
-          box-shadow: 0 0 10px ${c.bg};
+          box-shadow: 0 2px 6px ${c.shadow};
         "></div>
       </div>
     `,
-    iconSize: [24, 24],
-    iconAnchor: [12, 12],
-    popupAnchor: [0, -12],
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
+    popupAnchor: [0, -11],
   })
 }
 
@@ -76,32 +79,31 @@ export function createUserLocationIcon() {
     html: `
       <div style="
         position: relative;
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
         display: flex;
         align-items: center;
         justify-content: center;
       ">
         <div style="
           position: absolute;
-          width: 28px;
-          height: 28px;
+          width: 26px;
+          height: 26px;
           border-radius: 50%;
-          background: rgba(6, 182, 212, 0.35);
-          animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+          background: rgba(23, 107, 101, 0.2);
         "></div>
         <div style="
-          width: 14px;
-          height: 14px;
+          width: 13px;
+          height: 13px;
           border-radius: 50%;
-          background: #06b6d4;
-          border: 2.5px solid #ffffff;
-          box-shadow: 0 0 12px #06b6d4;
+          background: #176B65;
+          border: 2.5px solid #FFFFFF;
+          box-shadow: 0 2px 8px rgba(23, 107, 101, 0.4);
         "></div>
       </div>
     `,
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
-    popupAnchor: [0, -14],
+    iconSize: [26, 26],
+    iconAnchor: [13, 13],
+    popupAnchor: [0, -13],
   })
 }
