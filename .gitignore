@@ -1,0 +1,26 @@
+# Virtual environment
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+
+# Dependencies
+node_modules/
+dist/
+build/
+
+# OS and IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Large media & model weights (keep sample lightweight data tracked if needed)
+*.avi
+*.mp4
+*.pt
+*.onnx
+*.tar.gz
+outputs/
+data/processed/
