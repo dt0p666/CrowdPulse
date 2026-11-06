@@ -13,18 +13,26 @@ import {
   Layers,
   Sparkles
 } from 'lucide-react'
-import { fetchHealth } from '../services/api'
-import type { HealthResponse } from '../services/api'
+import { fetchHealth, fetchDatasets, fetchVideos } from '../services/api'
+import type { HealthResponse, DatasetMeta, VideoMeta } from '../services/api'
 
 export const OverviewPage: React.FC = () => {
   const [health, setHealth] = useState<HealthResponse | null>(null)
+  const [datasets, setDatasets] = useState<DatasetMeta[]>([])
+  const [videos, setVideos] = useState<VideoMeta[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchHealth()
-      .then(setHealth)
-      .catch(() => setHealth(null))
-      .finally(() => setLoading(false))
+    Promise.all([
+      fetchHealth().catch(() => null),
+      fetchDatasets().catch(() => []),
+      fetchVideos().catch(() => [])
+    ]).then(([h, ds, vids]) => {
+      setHealth(h)
+      setDatasets(ds)
+      setVideos(vids)
+      setLoading(false)
+    })
   }, [])
 
   return (
@@ -44,7 +52,7 @@ export const OverviewPage: React.FC = () => {
               SEE THE FLOW. SENSE THE SHIFT.
             </p>
             <p className="text-slate-300 text-sm leading-relaxed pt-1">
-              An advanced AI system combining computer vision, pedestrian tracking, velocity displacement, directional conflict dynamics, and spatiotemporal modeling to detect early indicators of crowd instability.
+              Full-stack AI crowd movement intelligence system combining computer vision pedestrian tracking, directional conflict dynamics, velocity variance, and 3D spatial mapping to provide early warnings of unsafe crowd states.
             </p>
           </div>
 
@@ -67,8 +75,12 @@ export const OverviewPage: React.FC = () => {
                 <span className="text-cyan-400">{health?.environment?.device?.toUpperCase() || 'CPU'}</span>
               </div>
               <div className="flex justify-between">
+                <span className="text-slate-500">Sample Feeds:</span>
+                <span>{videos.length || 3} videos</span>
+              </div>
+              <div className="flex justify-between">
                 <span className="text-slate-500">Sample Datasets:</span>
-                <span>{health?.environment?.sample_datasets_count ?? 3} loaded</span>
+                <span>{datasets.length || 3} CSVs</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">CV Engine:</span>
@@ -93,14 +105,14 @@ export const OverviewPage: React.FC = () => {
                 <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-cyan-950 text-cyan-400 border border-cyan-800">
                   MODE A
                 </span>
-                <span className="text-xs font-mono text-slate-400">REAL-TIME CV</span>
+                <span className="text-xs font-mono text-emerald-400 font-semibold">REAL DATA ONLY</span>
               </div>
               <h3 className="text-lg font-bold text-white flex items-center space-x-2">
                 <Video className="w-5 h-5 text-cyan-400" />
-                <span>Recorded Video Analysis</span>
+                <span>Recorded Video CV Analysis</span>
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Execute automated pedestrian detection, anonymous tracking IDs, trajectory calculation, velocity vectors, and zone occupancy from AVI/MP4 feeds with adjustable confidence and frame strides.
+                Automated YOLOv8 pedestrian detection, anonymous tracking IDs, velocity vectors, and zone occupancy from AVI/MP4 feeds with background job execution and visual scrubbing.
               </p>
             </div>
             <Link
@@ -119,14 +131,14 @@ export const OverviewPage: React.FC = () => {
                 <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-emerald-950 text-emerald-400 border border-emerald-800">
                   MODE B
                 </span>
-                <span className="text-xs font-mono text-slate-400">SPATIOTEMPORAL DATA</span>
+                <span className="text-xs font-mono text-emerald-400 font-semibold">REAL DATA ONLY</span>
               </div>
               <h3 className="text-lg font-bold text-white flex items-center space-x-2">
                 <FileSpreadsheet className="w-5 h-5 text-emerald-400" />
                 <span>Structured Dataset Lab</span>
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Ingest verified CSV bounding-box annotations (crosswalk, fourway, night), validate schemas, calculate image-space pixel velocity, reconstruct trajectories, and contrast movement dynamics.
+                Ingest verified CSV bounding-box annotations, validate schemas, calculate pixel displacement velocity, reconstruct trajectories, and benchmark across crosswalk, fourway, and night feeds.
               </p>
             </div>
             <Link
@@ -140,11 +152,11 @@ export const OverviewPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Platform Navigation Grid */}
+      {/* Intelligence Modules Grid */}
       <div>
         <h2 className="text-base font-mono font-semibold tracking-wider text-slate-200 uppercase mb-4 flex items-center space-x-2">
           <Activity className="w-4 h-4 text-cyan-400" />
-          <span>Intelligence Modules</span>
+          <span>Intelligence & Visualization Modules</span>
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link
