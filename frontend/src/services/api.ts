@@ -153,6 +153,72 @@ export interface VideoAnalysisResult {
   preview_keyframes: AnalysisKeyframe[]
 }
 
+export interface ModelStatus {
+  test_sample_count: number
+  train_sample_count: number
+  baseline_logistic_regression: {
+    accuracy: number
+  }
+  random_forest: {
+    accuracy: number
+    precision_macro: number
+    recall_macro: number
+    f1_macro: number
+    confusion_matrix: number[][]
+  }
+  classes: string[]
+  feature_names: string[]
+  feature_importances: Record<string, number>
+  leakage_prevention: string
+}
+
+export interface FeatureAttribution {
+  feature: string
+  measured_value: number
+  baseline_value: number
+  percentage_shift: number
+  global_importance: number
+  local_impact_direction: string
+}
+
+export interface ExplanationResult {
+  predicted_crowd_state: string
+  model_confidence: number
+  class_probabilities: Record<string, number>
+  contributing_features: FeatureAttribution[]
+  primary_driving_factor: string
+  scientific_disclaimer: string
+}
+
+export interface SimulationResult {
+  is_simulated: boolean
+  simulation_label: string
+  scenario_type: string
+  scenario_name: string
+  description: string
+  features_tested: Record<string, number>
+  assessment: ExplanationResult
+}
+
+export interface MetricDefinitionItem {
+  name: string
+  type: string
+  description: string
+  formula: string
+  inputs: string
+  limitations: string
+}
+
+export interface MetricDefinitionsResponse {
+  venue_zones: Array<{
+    id: string
+    name: string
+    bounds: number[]
+    color: string
+  }>
+  metrics: Record<string, MetricDefinitionItem>
+}
+
 const API_BASE = '/api'
 
 export async function fetchHealth(): Promise<HealthResponse> {
@@ -238,5 +304,27 @@ export async function pollJobStatus(jobId: string): Promise<JobStatus> {
 export async function fetchAnalysis(analysisId: string): Promise<VideoAnalysisResult> {
   const res = await fetch(`${API_BASE}/analyses/${analysisId}`)
   if (!res.ok) throw new Error(`Failed to fetch analysis ${analysisId}: ${res.status}`)
+  return res.json()
+}
+
+export async function fetchModelStatus(): Promise<ModelStatus> {
+  const res = await fetch(`${API_BASE}/models/status`)
+  if (!res.ok) throw new Error(`Failed to fetch model status: ${res.status}`)
+  return res.json()
+}
+
+export async function runSimulation(scenarioType: string): Promise<SimulationResult> {
+  const res = await fetch(`${API_BASE}/models/simulate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ scenario_type: scenarioType }),
+  })
+  if (!res.ok) throw new Error(`Simulation failed: ${res.status}`)
+  return res.json()
+}
+
+export async function fetchMetricDefinitions(): Promise<MetricDefinitionsResponse> {
+  const res = await fetch(`${API_BASE}/metrics/definitions`)
+  if (!res.ok) throw new Error(`Failed to fetch metric definitions: ${res.status}`)
   return res.json()
 }
