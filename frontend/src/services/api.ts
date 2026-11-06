@@ -219,6 +219,67 @@ export interface MetricDefinitionsResponse {
   metrics: Record<string, MetricDefinitionItem>
 }
 
+// -------------------------------------------------------------
+// INCIDENT & ADVISORY TYPES
+// -------------------------------------------------------------
+
+export interface AdvisoryInfo {
+  headline: string
+  public_action: string
+  affected_radius_km: number
+  published_by: string
+  published_at: string
+  expires_at?: string | null
+}
+
+export interface Incident {
+  id: string
+  title: string
+  description: string
+  city: string
+  locality: string
+  state: string
+  lat: floatNumber
+  lng: floatNumber
+  severity: 'GREEN' | 'YELLOW' | 'RED'
+  status: 'detected_by_system' | 'awaiting_review' | 'verified' | 'advisory_published' | 'resolved' | 'dismissed'
+  is_verified: boolean
+  source: string
+  is_demonstration: boolean
+  reported_at: string
+  updated_at: string
+  advisory?: AdvisoryInfo | null
+  supporting_metrics: Record<string, any>
+  timeline_updates: Array<{
+    timestamp: string
+    author: string
+    action: string
+    message: string
+  }>
+  distance_km?: number | null
+}
+
+type floatNumber = number
+
+export interface PublicAdvisoryResponse {
+  query_city: string | null
+  query_lat?: number | null
+  query_lng?: number | null
+  overall_city_status: 'GREEN' | 'YELLOW' | 'RED'
+  active_advisories_count: number
+  distance_clarification: string
+  incidents: Incident[]
+}
+
+export interface AuditEntry {
+  timestamp: string
+  officer_name: string
+  officer_badge: string
+  action: string
+  incident_id: string
+  details: string
+}
+
 const API_BASE = '/api'
 
 export async function fetchHealth(): Promise<HealthResponse> {
@@ -326,5 +387,100 @@ export async function runSimulation(scenarioType: string): Promise<SimulationRes
 export async function fetchMetricDefinitions(): Promise<MetricDefinitionsResponse> {
   const res = await fetch(`${API_BASE}/metrics/definitions`)
   if (!res.ok) throw new Error(`Failed to fetch metric definitions: ${res.status}`)
+  return res.json()
+}
+
+// -------------------------------------------------------------
+// PUBLIC & AUTHORITY INCIDENT APIS
+// -------------------------------------------------------------
+
+export async function fetchPublicAdvisories(params: {
+  lat?: number
+  lng?: number
+  city?: string
+  radius_km?: number
+}): Promise<PublicAdvisoryResponse> {
+  const sp = new URLSearchParams()
+  if (params.lat !== undefined && params.lat !== null) sp.append('lat', params.lat.toString())
+  if (params.lng !== undefined && params.lng !== null) sp.append('lng', params.lng.toString())
+  if (params.city) sp.append('city', params.city)
+  if (params.radius_km) sp.append('radius_km', params.radius_km.toString())
+
+  const res = await fetch(`${API_BASE}/public/advisories?${sp.toString()}`)
+  if (!res.ok) throw new Error(`Failed to fetch advisories: ${res.status}`)
+  return res.json()
+}
+
+export async function fetchIncidents(filters?: {
+  city?: string
+  severity?: string
+  status?: string
+  verified_only?: boolean
+}): Promise<Incident[]> {
+  const sp = new URLSearchParams()
+  if (filters?.city) sp.append('city', filters.city)
+  if (filters?.severity) sp.append('severity', filters.severity)
+  if (filters?.status) sp.append('status', filters.status)
+  if (filters?.verified_only !== undefined) sp.append('verified_only', filters.verified_only.toString())
+
+  const res = await fetch(`${API_BASE}/incidents?${sp.toString()}`)
+  if (!res.ok) throw new Error(`Failed to list incidents: ${res.status}`)
+  return res.json()
+}
+
+export async function fetchIncident(id: string): Promise<Incident> {
+  const res = await fetch(`${API_BASE}/incidents/${id}`)
+  if (!res.ok) throw new Error(`Failed to fetch incident ${id}: ${res.status}`)
+  return res.json()
+}
+
+export async function verifyIncident(
+  id: string,
+  payload: { decision: 'verified' | 'dismissed'; officer_name: string; officer_badge: string; notes: string }
+): Promise<Incident> {
+  const res = await fetch(`${API_BASE}/incidents/${id}/verify`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  if (!res.ok) throw new Error(`Verification failed: ${res.status}`)
+  return res.json()
+}
+
+export async function publishAdvisory(
+  id: string,
+  payload: {
+    headline: string
+    public_action: string
+    severity: string
+    affected_radius_km: number
+    officer_name: string
+  }
+): Promise<Incident> {
+  const res = await fetch(`${API_BASE}/incidents/${id}/advisory`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  if (!res.ok) throw new Error(`Advisory publishing failed: ${res.status}`)
+  return res.json()
+}
+
+export async function resolveIncident(
+  id: string,
+  payload: { officer_name: string; resolution_notes: string }
+): Promise<Incident> {
+  const res = await fetch(`${API_BASE}/incidents/${id}/resolve`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  if (!res.ok) throw new Error(`Incident resolution failed: ${res.status}`)
+  return res.json()
+}
+
+export async function fetchAuditTrail(): Promise<{ audit_log: AuditEntry[] }> {
+  const res = await fetch(`${API_BASE}/authority/audit`)
+  if (!res.ok) throw new Error(`Failed to fetch audit trail: ${res.status}`)
   return res.json()
 }

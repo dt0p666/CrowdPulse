@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from backend.app.core.config import settings
-from backend.app.api.routes import health, datasets, videos, analytics, models
+from backend.app.api.routes import health, datasets, videos, analytics, models, incidents, auth
 
 app = FastAPI(
     title=f"{settings.PROJECT_NAME} API",
@@ -27,6 +27,8 @@ app.include_router(datasets.router, prefix=settings.API_V1_PREFIX)
 app.include_router(videos.router, prefix=settings.API_V1_PREFIX)
 app.include_router(analytics.router, prefix=settings.API_V1_PREFIX)
 app.include_router(models.router, prefix=settings.API_V1_PREFIX)
+app.include_router(incidents.router, prefix=settings.API_V1_PREFIX)
+app.include_router(auth.router, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/")
