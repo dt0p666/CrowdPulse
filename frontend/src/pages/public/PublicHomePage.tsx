@@ -16,6 +16,8 @@ import {
   type PublicAdvisoryResponse,
 } from '../../services/api'
 import { createSeverityIcon, createUserLocationIcon } from '../../utils/leafletIcons'
+import { MAP_TILES, MapAutoResizer } from '../../utils/mapTiles'
+import { useTheme } from '../../context/ThemeContext'
 import { FigmaSpatialHero } from '../../components/home/FigmaSpatialHero'
 
 // Helper component to re-center the Leaflet map when city coordinates change
@@ -36,6 +38,18 @@ export const PublicHomePage: React.FC = () => {
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null)
   const [browserAlertsEnabled, setBrowserAlertsEnabled] = useState<boolean>(false)
   const [statusFeedback, setStatusFeedback] = useState<string>('')
+
+  const { theme } = useTheme()
+  const [mapStyle, setMapStyle] = useState<'street' | 'dark' | 'topo'>('street')
+
+  // Automatically adapt map basemap when user changes theme
+  useEffect(() => {
+    if (theme === 'dark' && mapStyle === 'street') {
+      setMapStyle('dark')
+    } else if (theme === 'light' && mapStyle === 'dark') {
+      setMapStyle('street')
+    }
+  }, [theme])
 
   // Default coordinate lookup
   const currentCityMeta =
@@ -285,8 +299,41 @@ export const PublicHomePage: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <span className="w-2 h-2 rounded-full bg-[#176B65] dark:bg-[#CEF03C]" />
                   <span className="font-semibold text-[#111111] dark:text-white">Live Street Map</span>
+                  <span className="text-[#6B726C] dark:text-[#94A3B8] font-mono text-[11px] hidden sm:inline">• {selectedCity}</span>
                 </div>
-                <span className="text-[#6B726C] dark:text-[#94A3B8] font-mono">{selectedCity} metropolitan grid</span>
+
+                <div className="flex items-center space-x-1.5 bg-[#ECEAE5] dark:bg-[#1C2638] p-1 rounded-lg">
+                  <button
+                    onClick={() => setMapStyle('street')}
+                    className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors cursor-pointer ${
+                      mapStyle === 'street'
+                        ? 'bg-[#FFFFFF] dark:bg-[#253144] text-[#176B65] dark:text-[#CEF03C] shadow-2xs font-semibold'
+                        : 'text-[#6B726C] dark:text-[#94A3B8] hover:text-[#111111] dark:hover:text-white'
+                    }`}
+                  >
+                    Street
+                  </button>
+                  <button
+                    onClick={() => setMapStyle('dark')}
+                    className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors cursor-pointer ${
+                      mapStyle === 'dark'
+                        ? 'bg-[#FFFFFF] dark:bg-[#253144] text-[#176B65] dark:text-[#CEF03C] shadow-2xs font-semibold'
+                        : 'text-[#6B726C] dark:text-[#94A3B8] hover:text-[#111111] dark:hover:text-white'
+                    }`}
+                  >
+                    Dark
+                  </button>
+                  <button
+                    onClick={() => setMapStyle('topo')}
+                    className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors cursor-pointer ${
+                      mapStyle === 'topo'
+                        ? 'bg-[#FFFFFF] dark:bg-[#253144] text-[#176B65] dark:text-[#CEF03C] shadow-2xs font-semibold'
+                        : 'text-[#6B726C] dark:text-[#94A3B8] hover:text-[#111111] dark:hover:text-white'
+                    }`}
+                  >
+                    Topo
+                  </button>
+                </div>
               </div>
 
               <div className="h-[440px] w-full relative">
@@ -297,11 +344,14 @@ export const PublicHomePage: React.FC = () => {
                   style={{ height: '100%', width: '100%' }}
                 >
                   <ChangeMapView center={activeCenter} />
+                  <MapAutoResizer />
 
-                  {/* Standard OpenStreetMap Tile Server - 100% Free, NO API Key Watermark! */}
+                  {/* Real World Geographic Map Tiles - Fast, 100% Free, Zero Watermarks */}
                   <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    key={mapStyle}
+                    attribution={MAP_TILES[mapStyle]?.attribution || MAP_TILES.street.attribution}
+                    url={MAP_TILES[mapStyle]?.url || MAP_TILES.street.url}
+                    maxZoom={MAP_TILES[mapStyle]?.maxZoom || 19}
                   />
 
                   {/* User GPS Pin */}

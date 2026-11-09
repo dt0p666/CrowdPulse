@@ -13,6 +13,7 @@ import { PublicLayout } from '../../layouts/PublicLayout'
 import { fetchIncident, type Incident } from '../../services/api'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { createSeverityIcon } from '../../utils/leafletIcons'
+import { MAP_TILES, MapAutoResizer } from '../../utils/mapTiles'
 
 export const IncidentDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -146,9 +147,11 @@ export const IncidentDetailsPage: React.FC = () => {
                     scrollWheelZoom={false}
                     style={{ height: '100%', width: '100%' }}
                   >
+                    <MapAutoResizer />
                     <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution={MAP_TILES.street.attribution}
+                      url={MAP_TILES.street.url}
+                      maxZoom={MAP_TILES.street.maxZoom}
                     />
                     <Marker
                       position={[incident.lat, incident.lng]}

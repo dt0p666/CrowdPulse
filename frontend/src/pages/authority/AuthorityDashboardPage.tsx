@@ -9,6 +9,8 @@ import { AuthorityLayout } from '../../layouts/AuthorityLayout'
 import { fetchIncidents, type Incident } from '../../services/api'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { createSeverityIcon } from '../../utils/leafletIcons'
+import { MAP_TILES, MapAutoResizer } from '../../utils/mapTiles'
+import { useTheme } from '../../context/ThemeContext'
 import {
   ResponsiveContainer,
   BarChart,
@@ -21,6 +23,17 @@ import {
 } from 'recharts'
 
 export const AuthorityDashboardPage: React.FC = () => {
+  const { theme } = useTheme()
+  const [basemap, setBasemap] = useState<'street' | 'dark' | 'topo'>('street')
+
+  useEffect(() => {
+    if (theme === 'dark' && basemap === 'street') {
+      setBasemap('dark')
+    } else if (theme === 'light' && basemap === 'dark') {
+      setBasemap('street')
+    }
+  }, [theme])
+
   const [incidents, setIncidents] = useState<Incident[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [alertFilter, setAlertFilter] = useState<'ALL' | 'CRITICAL' | 'WARNING' | 'INFO'>('ALL')
@@ -213,13 +226,36 @@ export const AuthorityDashboardPage: React.FC = () => {
                           <span className="capitalize">{k.replace(/([A-Z])/g, ' $1')}</span>
                         </label>
                       ))}
+
+                      {/* Basemap Style Selection */}
+                      <div className="pt-2 border-t border-[#D8D6CE] dark:border-[#2B3950] space-y-1">
+                        <div className="text-[10px] text-[#6B726C] dark:text-slate-400 uppercase tracking-wider font-semibold font-mono">
+                          Basemap Style
+                        </div>
+                        <div className="grid grid-cols-3 gap-1 pt-0.5">
+                          {(['street', 'dark', 'topo'] as const).map((b) => (
+                            <button
+                              key={b}
+                              type="button"
+                              onClick={() => setBasemap(b)}
+                              className={`px-1.5 py-1 text-[10px] rounded font-medium capitalize transition-colors cursor-pointer text-center ${
+                                basemap === b
+                                  ? 'bg-[#176B65] text-white dark:bg-[#CEF03C] dark:text-black font-semibold shadow-2xs'
+                                  : 'bg-[#ECEAE5] dark:bg-[#1C2638] text-[#6B726C] dark:text-slate-300 hover:text-black dark:hover:text-white'
+                              }`}
+                            >
+                              {b}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* Map Container with OpenStreetMap Tiles */}
+            {/* Map Container with Real World Street Map Tiles */}
             <div className="h-[430px] w-full relative">
               <MapContainer
                 center={[18.5204, 73.8567]}
@@ -227,9 +263,12 @@ export const AuthorityDashboardPage: React.FC = () => {
                 scrollWheelZoom={false}
                 style={{ height: '100%', width: '100%' }}
               >
+                <MapAutoResizer />
                 <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  key={basemap}
+                  attribution={MAP_TILES[basemap]?.attribution || MAP_TILES.street.attribution}
+                  url={MAP_TILES[basemap]?.url || MAP_TILES.street.url}
+                  maxZoom={MAP_TILES[basemap]?.maxZoom || 19}
                 />
 
                 {incidents.map((inc) => (
