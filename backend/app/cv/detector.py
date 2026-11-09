@@ -1,16 +1,24 @@
 from pathlib import Path
 from typing import List, Dict, Any
 import numpy as np
-import torch
-from ultralytics import YOLO
+try:
+    import torch
+    from ultralytics import YOLO
+    DETECTOR_AVAILABLE = True
+except Exception:
+    torch = None
+    YOLO = None
+    DETECTOR_AVAILABLE = False
 from backend.app.core.config import settings
 
-_MODEL_INSTANCE: YOLO | None = None
+_MODEL_INSTANCE: Any = None
 
 
-def get_yolo_detector(model_name: str = "yolov8n.pt") -> YOLO:
+def get_yolo_detector(model_name: str = "yolov8n.pt") -> Any:
     """Singleton getter for pretrained YOLO pedestrian detector."""
     global _MODEL_INSTANCE
+    if not DETECTOR_AVAILABLE or YOLO is None:
+        return None
     if _MODEL_INSTANCE is None:
         weights_path = settings.MODELS_DIR / model_name
         if not weights_path.exists():
@@ -29,13 +37,15 @@ class PedestrianDetector:
     def __init__(self, conf_threshold: float = 0.25, model_name: str = "yolov8n.pt"):
         self.conf_threshold = conf_threshold
         self.model = get_yolo_detector(model_name)
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.device = "cuda" if (torch and torch.cuda.is_available()) else "cpu"
 
     def detect(self, frame: np.ndarray) -> List[Dict[str, Any]]:
         """
         Detect pedestrians (class 0: person) in a single BGR frame.
         Returns: list of detections with bbox [x1, y1, x2, y2] and confidence.
         """
+        if self.model is None:
+            return []
         results = self.model.predict(
             source=frame,
             classes=[0],  # 0 is 'person' in COCO
